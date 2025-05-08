@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -43,7 +43,7 @@ export default function Home() {
 
   // Calcular proyección de pensión
   const calcularProyección = () => {
-    const añosRestantes = 65 - formData.edad;
+    
     const salarioInicial = formData.salario;
     const incrementoAnual = 0.03; // 3% de incremento anual
     const rentabilidad = 0.05; // 5% de rentabilidad anual
