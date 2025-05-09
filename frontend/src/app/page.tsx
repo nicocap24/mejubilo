@@ -71,8 +71,8 @@ export default function Home() {
       {
         label: 'Proyección de Pensión',
         data: calcularProyección(),
-        borderColor: 'rgb(59, 130, 246)',
-        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+        borderColor: '#00A19C',
+        backgroundColor: 'rgba(0, 161, 156, 0.1)',
         fill: true,
         tension: 0.4,
       },
@@ -122,7 +122,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-900 to-blue-800">
+    <div className="min-h-screen">
       {/* Header */}
       <header className="container mx-auto px-4 py-6">
         <nav className="flex justify-between items-center">
@@ -136,122 +136,163 @@ export default function Home() {
         </nav>
       </header>
 
-      {/* Hero Section */}
-      <main className="container mx-auto px-4 py-16">
-        <div className="max-w-4xl mx-auto text-center space-y-8">
-          <h1 className="text-7xl font-bold text-white mb-4 tracking-tight">
-            Simula tu pensión
-          </h1>
-          <p className="text-xl text-blue-100 mb-8">
-            Descubre cuánto podrías recibir en tu jubilación y aprende cómo mejorarla
-          </p>
+      {/* Hero Section con imagen de fondo */}
+      <section className="w-full bg-cover bg-center" style={{ backgroundImage: 'url(/bg-hero.png)' }}>
+        <main className="container mx-auto px-4 py-16">
+          <div className="max-w-4xl mx-auto text-center space-y-8">
+            <h1 className="text-7xl font-bold text-white mb-4 tracking-tight">
+              ¿Ya quieres jubilar?
+            </h1>
+            <p className="text-xl text-blue-100 mb-8">
+              Descubre cuánto $$ podrías obtener si jubilaras HOY:
+            </p>
 
-          {/* Simulator Card */}
-          <div className="bg-white rounded-2xl p-8 shadow-xl">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-gray-700 text-sm font-medium mb-2">
-                    Edad actual
-                  </label>
-                  <input 
-                    type="number" 
-                    name="edad"
-                    value={formData.edad}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Ej: 45"
-                  />
+            {/* Simulator Card */}
+            <div className="bg-white rounded-2xl p-8 shadow-xl">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-gray-700 text-sm font-medium mb-2">
+                      Edad actual
+                    </label>
+                    <input 
+                      type="number" 
+                      name="edad"
+                      value={formData.edad}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="Ej: 45"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-gray-700 text-sm font-medium mb-2">
+                      Salario actual
+                    </label>
+                    <input 
+                      type="number" 
+                      name="salario"
+                      value={formData.salario}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="Ej: 3000000"
+                    />
+                  </div>
                 </div>
-                <div>
-                  <label className="block text-gray-700 text-sm font-medium mb-2">
-                    Salario actual
-                  </label>
-                  <input 
-                    type="number" 
-                    name="salario"
-                    value={formData.salario}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Ej: 3000000"
-                  />
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-gray-700 text-sm font-medium mb-2">
+                      Años cotizados
+                    </label>
+                    <input 
+                      type="number" 
+                      name="añosCotizados"
+                      value={formData.añosCotizados}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="Ej: 15"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-gray-700 text-sm font-medium mb-2">
+                      AFP actual
+                    </label>
+                    <select 
+                      name="afp"
+                      value={formData.afp}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                      <option value="capital">Capital</option>
+                      <option value="cuprum">Cuprum</option>
+                      <option value="habitat">Habitat</option>
+                      <option value="modelo">Modelo</option>
+                      <option value="planvital">PlanVital</option>
+                      <option value="provida">ProVida</option>
+                    </select>
+                  </div>
                 </div>
               </div>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-gray-700 text-sm font-medium mb-2">
-                    Años cotizados
-                  </label>
-                  <input 
-                    type="number" 
-                    name="añosCotizados"
-                    value={formData.añosCotizados}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Ej: 15"
-                  />
+              <button 
+                onClick={handleCalculate}
+                className="w-full mt-8 bg-blue-900 text-white px-8 py-4 rounded-full text-xl font-semibold hover:bg-blue-800 transition-colors duration-300 shadow-lg hover:shadow-xl"
+              >
+                Actualizar simulación
+              </button>
+
+              {/* Gráfico de Simulación */}
+              {showChart && (
+                <div className="mt-8 p-4 bg-white rounded-xl">
+                  <Line options={chartOptions} data={chartData} />
+                  <div className="mt-4 text-gray-600 text-sm">
+                    <p>* Esta es una proyección estimada basada en los datos ingresados</p>
+                    <p>* Considera un incremento anual del 3% en el salario y una rentabilidad del 5% anual</p>
+                  </div>
                 </div>
-                <div>
-                  <label className="block text-gray-700 text-sm font-medium mb-2">
-                    AFP actual
-                  </label>
-                  <select 
-                    name="afp"
-                    value={formData.afp}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  >
-                    <option value="capital">Capital</option>
-                    <option value="cuprum">Cuprum</option>
-                    <option value="habitat">Habitat</option>
-                    <option value="modelo">Modelo</option>
-                    <option value="planvital">PlanVital</option>
-                    <option value="provida">ProVida</option>
-                  </select>
-                </div>
+              )}
+            </div>
+
+            {/* Features Section */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
+              <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 text-white">
+                <h3 className="text-xl font-semibold mb-2">Simulación Precisa</h3>
+                <p className="text-blue-100">Calcula tu pensión estimada con datos reales del mercado</p>
+              </div>
+              <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 text-white">
+                <h3 className="text-xl font-semibold mb-2">Compara AFPs</h3>
+                <p className="text-blue-100">Encuentra la mejor AFP para maximizar tu pensión</p>
+              </div>
+              <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 text-white">
+                <h3 className="text-xl font-semibold mb-2">Recomendaciones</h3>
+                <p className="text-blue-100">Recibe consejos personalizados para mejorar tu jubilación</p>
               </div>
             </div>
-            <button 
-              onClick={handleCalculate}
-              className="w-full mt-8 bg-blue-900 text-white px-8 py-4 rounded-full text-xl font-semibold hover:bg-blue-800 transition-colors duration-300 shadow-lg hover:shadow-xl"
-            >
-              Actualizar simulación
-            </button>
-
-            {/* Gráfico de Simulación */}
-            {showChart && (
-              <div className="mt-8 p-4 bg-white rounded-xl">
-                <Line options={chartOptions} data={chartData} />
-                <div className="mt-4 text-gray-600 text-sm">
-                  <p>* Esta es una proyección estimada basada en los datos ingresados</p>
-                  <p>* Considera un incremento anual del 3% en el salario y una rentabilidad del 5% anual</p>
-                </div>
-              </div>
-            )}
           </div>
-
-          {/* Features Section */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
-            <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 text-white">
-              <h3 className="text-xl font-semibold mb-2">Simulación Precisa</h3>
-              <p className="text-blue-100">Calcula tu pensión estimada con datos reales del mercado</p>
-            </div>
-            <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 text-white">
-              <h3 className="text-xl font-semibold mb-2">Compara AFPs</h3>
-              <p className="text-blue-100">Encuentra la mejor AFP para maximizar tu pensión</p>
-            </div>
-            <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 text-white">
-              <h3 className="text-xl font-semibold mb-2">Recomendaciones</h3>
-              <p className="text-blue-100">Recibe consejos personalizados para mejorar tu jubilación</p>
-            </div>
-          </div>
-        </div>
-      </main>
+        </main>
+      </section>
 
       {/* Footer */}
-      <footer className="container mx-auto px-4 py-8 mt-16 border-t border-blue-800">
-        <div className="text-center text-blue-200">
-          <p>© 2024 MeJubilo. Todos los derechos reservados.</p>
+      <footer className="container mx-auto px-4 py-12 mt-16 border-t border-blue-800">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div className="space-y-4">
+            <h3 className="text-white text-xl font-bold">MeJubilo</h3>
+            <p className="text-blue-200 text-sm">Tu compañero en el camino hacia una jubilación segura y tranquila.</p>
+          </div>
+          <div>
+            <h4 className="text-white font-semibold mb-4">Enlaces Rápidos</h4>
+            <ul className="space-y-2">
+              <li><a href="#" className="text-blue-200 hover:text-white transition-colors">Simulador de Pensión</a></li>
+              <li><a href="#" className="text-blue-200 hover:text-white transition-colors">Comparador de AFPs</a></li>
+              <li><a href="#" className="text-blue-200 hover:text-white transition-colors">Blog</a></li>
+              <li><a href="#" className="text-blue-200 hover:text-white transition-colors">Preguntas Frecuentes</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="text-white font-semibold mb-4">Recursos</h4>
+            <ul className="space-y-2">
+              <li><a href="#" className="text-blue-200 hover:text-white transition-colors">Guía de Jubilación</a></li>
+              <li><a href="#" className="text-blue-200 hover:text-white transition-colors">Calculadoras</a></li>
+              <li><a href="#" className="text-blue-200 hover:text-white transition-colors">Glosario</a></li>
+              <li><a href="#" className="text-blue-200 hover:text-white transition-colors">Noticias</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="text-white font-semibold mb-4">Contacto</h4>
+            <ul className="space-y-2">
+              <li className="text-blue-200">contacto@mejubilo.cl</li>
+              <li className="text-blue-200">+56 9 1234 5678</li>
+              <li className="text-blue-200">Lunes a Viernes 9:00 - 18:00</li>
+            </ul>
+          </div>
+        </div>
+        <div className="border-t border-blue-800 mt-8 pt-8">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <p className="text-blue-200 text-sm">© 2024 MeJubilo. Todos los derechos reservados.</p>
+            <div className="flex space-x-6 mt-4 md:mt-0">
+              <a href="#" className="text-blue-200 hover:text-white text-sm transition-colors">Términos y Condiciones</a>
+              <a href="#" className="text-blue-200 hover:text-white text-sm transition-colors">Política de Privacidad</a>
+              <a href="#" className="text-blue-200 hover:text-white text-sm transition-colors">Cookies</a>
+            </div>
+          </div>
         </div>
       </footer>
     </div>
