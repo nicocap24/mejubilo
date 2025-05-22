@@ -7,6 +7,7 @@ import PensionSimulator from './components/PensionSimulator';
 import PricingSection from './components/PricingSection';
 import FAQSection from './components/FAQSection';
 import Footer from './components/Footer';
+import Link from 'next/link';
 
 // Valor UF actual (se podría actualizar con una API en producción)
 const UF_VALUE = 39000;
@@ -86,7 +87,7 @@ export default function Home() {
   const handleCalculate = () => {
     if (!saldo || isNaN(Number(saldo))) return;
     setIsCalculating(true);
-    setResult(null); // Oculta el resultado anterior mientras calcula
+    setResult(null);
     setTimeout(() => {
       setResult(calculateTotalPension(Number(saldo)));
       setIsCalculating(false);
@@ -94,51 +95,28 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-cover bg-center flex flex-col items-center justify-center" style={{ backgroundImage: 'url(/bg-hero.png)' }}>
-      <div className="mt-8 bg-white rounded-3xl shadow-2xl px-8 py-10 max-w-lg w-full flex flex-col items-center border-2 border-gray-200" style={{ minHeight: 420 }}>
+    <div className="min-h-screen w-full bg-cover bg-center flex flex-col items-center justify-center" style={{ backgroundImage: 'url(/bg-hero.png)', backgroundColor: 'rgba(255, 255, 255, 0.7)', backgroundBlendMode: 'overlay' }}>
+      <div className="mt-8 bg-white rounded-3xl shadow-2xl px-12 py-16 max-w-2xl w-full flex flex-col items-center border-2 border-gray-200">
         {/* Header */}
-        <div className="mb-6">
-          <span className="text-3xl font-bold text-gray-700 mr-1">Me</span>
-          <span className="text-3xl font-bold text-orange-400">Jubilo</span>
+        <div className="mb-8">
+          <span className="text-4xl font-bold text-gray-700 mr-1">Me</span>
+          <span className="text-4xl font-bold text-orange-400">Jubilo</span>
         </div>
         {/* Main Title */}
-        <h1 className="text-4xl md:text-5xl font-bold text-center text-gray-900 mb-2">
-          Ya quieres <span className="text-orange-400">jubilar</span> ?
+        <h1 className="text-5xl md:text-6xl font-bold text-center text-gray-900 mb-6">
+          Toma el control de tus ahorros
         </h1>
         {/* Subtext */}
-        <p className="text-lg text-center text-gray-700 mb-6">
-          Descubre con cuánto $$<br />podrías jubilar <span className="font-bold">HOY</span>:
+        <p className="text-2xl text-center text-gray-700 mb-10">
+          Renta más. Paga menos comisión. Jubila mejor.
         </p>
-        {/* Input and Button */}
-        <input
-          type="text"
-          placeholder="Saldo AFP"
-          value={saldo}
-          onChange={e => {
-            const value = e.target.value.replace(/[^0-9]/g, '');
-            setSaldo(value);
-          }}
-          className="w-full max-w-xs px-4 py-3 mb-4 border border-gray-400 rounded-lg text-center text-lg focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder:text-gray-700 text-gray-700"
-        />
-        <button
-          className="w-full max-w-xs bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-full text-lg shadow-md transition-colors flex items-center justify-center mb-2"
-          onClick={handleCalculate}
+        {/* Button */}
+        <Link
+          href="/entra"
+          className="w-full max-w-md bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-full text-xl shadow-md transition-colors flex items-center justify-center"
         >
-          Quiero saber <span className="ml-2">👀</span>
-        </button>
-        {/* Result Box o Calculando */}
-        {isCalculating ? (
-          <CalculandoScreen />
-        ) : result && (
-          <div className="mt-6 w-full max-w-xs bg-blue-50 border-2 border-blue-200 rounded-2xl p-5 text-center shadow-lg animate-fade-in">
-            <h2 className="text-xl font-bold text-blue-900 mb-2">¡Tu pensión estimada!</h2>
-            <div className="text-lg text-gray-700 mb-1 flex justify-between"><span>Renta Vitalicia:</span> <span className="font-semibold">${result.rentaVitalicia.toLocaleString('es-CL')}</span></div>
-            <div className="text-lg text-gray-700 mb-1 flex justify-between"><span>Seguro Social:</span> <span className="font-semibold">${result.seguroSocial.toLocaleString('es-CL')}</span></div>
-            <div className="text-lg text-gray-700 mb-1 flex justify-between"><span>PGU:</span> <span className="font-semibold">${result.pgu.toLocaleString('es-CL')}</span></div>
-            <hr className="my-2 border-blue-200" />
-            <div className="text-lg font-bold text-blue-800 flex justify-between"><span>Total:</span> <span>${result.total.toLocaleString('es-CL')}</span></div>
-          </div>
-        )}
+          Descubre cómo
+        </Link>
       </div>
     </div>
   );
