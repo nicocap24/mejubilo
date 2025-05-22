@@ -21,6 +21,7 @@ const PricingSection = () => {
               <div className="text-4xl font-bold text-gray-900 mb-6">
                 Gratis
               </div>
+              <p className="text-sm text-gray-500 mb-6">Modalidad: Individual</p>
             </div>
             <div className="mt-8">
               <ul className="space-y-4">
@@ -68,8 +69,9 @@ const PricingSection = () => {
                 $5.000
               </div>
               <p className="text-sm text-gray-500 mb-2">/mes</p>
-              <p className="text-sm text-orange-500 mb-6">*Precio normal: $10.000/mes</p>
-              <p className="text-xs text-gray-500 mb-6">Oferta válida solo para los primeros 100 cupos</p>
+              <p className="text-sm text-orange-500 mb-2">*Precio normal: $10.000/mes</p>
+              <p className="text-xs text-gray-500 mb-2">Oferta válida solo para los primeros 100 cupos</p>
+              <p className="text-sm text-gray-500 mb-6">Modalidad: Individual y Grupal</p>
             </div>
             <div className="mt-8">
               <ul className="space-y-4">
@@ -99,29 +101,13 @@ const PricingSection = () => {
                 </li>
               </ul>
             </div>
-            <div className="mt-8 text-center">
+            <div className="mt-8">
               <Link
                 href="/registro"
-                className="block w-full bg-orange-400 text-white font-semibold py-3 px-6 rounded-full hover:bg-orange-500 transition-colors"
+                className="block w-full bg-orange-400 text-white font-semibold py-3 px-6 rounded-full hover:bg-orange-500 transition-colors text-center"
               >
                 Elegir Plan
               </Link>
-            </div>
-            <div className="mt-8 text-center">
-              <Link
-                href="/registro"
-                className="block w-full bg-orange-400 text-white font-semibold py-3 px-6 rounded-full hover:bg-orange-500 transition-colors"
-              >
-                Registrarse
-              </Link>
-            </div>
-            <div className="mt-8 text-center">
-              <button
-                disabled
-                className="block w-full bg-gray-300 text-gray-500 font-semibold py-3 px-6 rounded-full cursor-not-allowed"
-              >
-                Próximamente
-              </button>
             </div>
           </div>
 
@@ -130,10 +116,11 @@ const PricingSection = () => {
             <div className="text-center">
               <h3 className="text-2xl font-bold text-gray-800 mb-2">Plus</h3>
               <p className="text-gray-600 mb-6">Para profesionales</p>
-              <div className="text-4xl font-bold text-gray-900 mb-6">
+              <div className="text-4xl font-bold text-gray-900 mb-2">
                 $20.000
-                <span className="text-sm text-gray-500">/mes</span>
               </div>
+              <p className="text-sm text-gray-500 mb-2">/mes</p>
+              <p className="text-sm text-gray-500 mb-6">Modalidad: Individual, Grupal y Empresa</p>
             </div>
             <div className="mt-8">
               <ul className="space-y-4">
@@ -166,7 +153,7 @@ const PricingSection = () => {
             <div className="mt-8">
               <button
                 disabled
-                className="block w-full bg-gray-300 text-gray-500 font-semibold py-3 px-6 rounded-full cursor-not-allowed"
+                className="block w-full bg-gray-300 text-gray-500 font-semibold py-3 px-6 rounded-full cursor-not-allowed text-center"
               >
                 Próximamente
               </button>
