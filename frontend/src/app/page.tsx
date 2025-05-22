@@ -140,7 +140,7 @@ export default function Home() {
       <section className="w-full bg-cover bg-center" style={{ backgroundImage: 'url(/bg-hero.png)' }}>
         <main className="container mx-auto px-4 py-16">
           <div className="max-w-4xl mx-auto text-center space-y-8">
-            <h1 className="text-7xl font-bold text-white mb-4 tracking-tight">
+            <h1 className="text-7xl font-bold text-yellow-400 mb-4 tracking-tight">
               ¿Ya quieres jubilar?
             </h1>
             <p className="text-xl text-blue-100 mb-8">
