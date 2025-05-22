@@ -10,7 +10,7 @@ export default function Header() {
               MeJubilo
             </Link>
           </div>
-          <nav className="hidden md:flex space-x-8">
+          <nav className="hidden md:flex space-x-8 items-center">
             <Link href="/acerca" className="text-gray-600 hover:text-gray-900">
               Acerca de
             </Link>
@@ -20,7 +20,10 @@ export default function Header() {
             <Link href="/aprende" className="text-gray-600 hover:text-gray-900">
               Aprende
             </Link>
-            <Link href="/entra" className="text-gray-600 hover:text-gray-900">
+            <Link 
+              href="/entra" 
+              className="bg-orange-400 hover:bg-orange-500 text-white font-bold px-6 py-2 rounded-full transition-colors"
+            >
               Entra
             </Link>
           </nav>
