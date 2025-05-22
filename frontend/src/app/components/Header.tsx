@@ -3,6 +3,7 @@ import Link from 'next/link';
 
 const Header = () => {
   const [isAprendeOpen, setIsAprendeOpen] = useState(false);
+  const [isPreciosOpen, setIsPreciosOpen] = useState(false);
 
   return (
     <header className="w-full bg-white shadow-sm">
@@ -15,7 +16,41 @@ const Header = () => {
         {/* Secciones */}
         <div className="flex space-x-8 items-center">
           <a href="#acerca" className="text-gray-700 hover:text-orange-400 font-medium transition-colors">Acerca de</a>
-          <a href="#precios" className="text-gray-700 hover:text-orange-400 font-medium transition-colors">Precios</a>
+          
+          {/* Precios Dropdown */}
+          <div className="relative">
+            <button
+              onClick={() => setIsPreciosOpen(!isPreciosOpen)}
+              className="text-gray-700 hover:text-orange-400 font-medium transition-colors flex items-center"
+            >
+              Precios
+              <svg
+                className={`ml-1 w-4 h-4 transition-transform ${isPreciosOpen ? 'rotate-180' : ''}`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            
+            {isPreciosOpen && (
+              <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-50 border border-gray-100">
+                <a
+                  href="#precios"
+                  className="block px-4 py-2 text-gray-700 hover:bg-orange-50 hover:text-orange-400 transition-colors"
+                >
+                  Planes y Precios
+                </a>
+                <Link
+                  href="/leaderboard"
+                  className="block px-4 py-2 text-gray-700 hover:bg-orange-50 hover:text-orange-400 transition-colors"
+                >
+                  Leaderboard
+                </Link>
+              </div>
+            )}
+          </div>
           
           {/* Aprende Dropdown */}
           <div className="relative">
