@@ -7,9 +7,6 @@ const PricingSection = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-gray-900 mb-4">Planes y Precios</h2>
-          <p className="text-xl text-gray-600">
-            Elige el plan que mejor se adapte a tus necesidades y comienza a optimizar tu futuro previsional hoy mismo
-          </p>
         </div>
 
         <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
