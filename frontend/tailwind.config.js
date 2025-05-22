@@ -7,6 +7,10 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['var(--font-inter)'],
+        body: ['var(--font-roboto)'],
+      },
       colors: {
         'pensionfi': {
           green: '#00A19C', // Color verde de Pensionfi.com
