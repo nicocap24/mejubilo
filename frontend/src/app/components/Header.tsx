@@ -36,12 +36,12 @@ const Header = () => {
             
             {isPreciosOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-50 border border-gray-100">
-                <a
-                  href="#precios"
+                <Link
+                  href="/precios"
                   className="block px-4 py-2 text-gray-700 hover:bg-orange-50 hover:text-orange-400 transition-colors"
                 >
                   Planes y Precios
-                </a>
+                </Link>
                 <Link
                   href="/leaderboard"
                   className="block px-4 py-2 text-gray-700 hover:bg-orange-50 hover:text-orange-400 transition-colors"
