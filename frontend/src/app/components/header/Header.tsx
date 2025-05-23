@@ -35,7 +35,12 @@ const Header = () => {
             onToggle={() => toggleDropdown('perfil')} 
           />
 
-          <NavigationLink href="/ultimos-movimientos" label="Últimos Movimientos" />
+          <a 
+            href="/ultimos-movimientos" 
+            className="bg-orange-400 hover:bg-orange-500 text-white font-bold px-6 py-2 rounded-full transition-colors"
+          >
+            Últimos Movimientos
+          </a>
 
           {Object.entries(navigationConfig).map(([key, section]) => (
             <NavigationDropdown
