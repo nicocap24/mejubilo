@@ -6,18 +6,7 @@ module.exports = {
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
-    extend: {
-      fontFamily: {
-        sans: ['var(--font-inter)'],
-        body: ['var(--font-roboto)'],
-      },
-      colors: {
-        'pensionfi': {
-          green: '#00A19C', // Color verde de Pensionfi.com
-          'green-dark': '#007A76', // Versión más oscura del verde
-        },
-      },
-    },
+    extend: {},
   },
   plugins: [],
 } 
