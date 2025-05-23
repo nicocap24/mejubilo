@@ -8,31 +8,36 @@ const sampleUsers = [
   {
     username: "Juan Pérez",
     afpBalance: 45000000,
-    afpFund: "Capital",
+    afpName: "Capital",
+    afpFundType: "A",
     profit: 2500000
   },
   {
     username: "María González",
     afpBalance: 38000000,
-    afpFund: "Habitat",
+    afpName: "Habitat",
+    afpFundType: "B",
     profit: 1800000
   },
   {
     username: "Carlos Rodríguez",
     afpBalance: 42000000,
-    afpFund: "Cuprum",
+    afpName: "Cuprum",
+    afpFundType: "C",
     profit: 2100000
   },
   {
     username: "Ana Martínez",
     afpBalance: 35000000,
-    afpFund: "ProVida",
+    afpName: "ProVida",
+    afpFundType: "D",
     profit: 1500000
   },
   {
     username: "Pedro Sánchez",
     afpBalance: 40000000,
-    afpFund: "PlanVital",
+    afpName: "PlanVital",
+    afpFundType: "E",
     profit: 1900000
   }
 ];
