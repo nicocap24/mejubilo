@@ -5,6 +5,7 @@ import NavigationLink from './NavigationLink';
 import ProfileDropdown from './ProfileDropdown';
 import { navigationConfig } from './navigation';
 import { DropdownState } from './types';
+import { event } from '@/app/utils/analytics';
 
 const Header = () => {
   const [dropdowns, setDropdowns] = useState<DropdownState>({
@@ -20,6 +21,21 @@ const Header = () => {
       ...prev,
       [name]: !prev[name]
     }));
+    
+    // Track dropdown interactions
+    event({
+      action: 'toggle_dropdown',
+      category: 'navigation',
+      label: name
+    });
+  };
+
+  const handleNavigationClick = (section: string) => {
+    event({
+      action: 'click',
+      category: 'navigation',
+      label: section
+    });
   };
 
   return (
@@ -28,7 +44,11 @@ const Header = () => {
         <Logo />
 
         <div className="flex space-x-8 items-center">
-          <NavigationLink href="#acerca" label="Acerca de" />
+          <NavigationLink 
+            href="#acerca" 
+            label="Acerca de" 
+            onClick={() => handleNavigationClick('acerca')}
+          />
 
           <ProfileDropdown 
             isOpen={dropdowns.perfil} 
@@ -38,6 +58,7 @@ const Header = () => {
           <a 
             href="/ultimos-movimientos" 
             className="bg-orange-400 hover:bg-orange-500 text-white font-bold px-6 py-2 rounded-full transition-colors"
+            onClick={() => handleNavigationClick('ultimos-movimientos')}
           >
             Últimos Movimientos
           </a>
@@ -55,6 +76,7 @@ const Header = () => {
           <a 
             href="#entrar" 
             className="text-blue-600 hover:text-blue-800 font-bold px-4 py-2 rounded-full border border-blue-600 transition-colors"
+            onClick={() => handleNavigationClick('entrar')}
           >
             Entrar
           </a>

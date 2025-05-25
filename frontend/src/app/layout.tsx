@@ -3,6 +3,7 @@ import { Inter, Roboto } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import GoogleAnalytics from "./components/GoogleAnalytics";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -30,6 +31,7 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${roboto.variable} antialiased`}
       >
+        <GoogleAnalytics />
         <Header />
         {children}
         <Footer />
