@@ -1,7 +1,13 @@
+declare global {
+  interface Window {
+    gtag: (...args: any[]) => void;
+  }
+}
+
 // Track page views
 export const pageview = (url: string) => {
   if (typeof window.gtag !== 'undefined') {
-    window.gtag('config', process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID as string, {
+    window.gtag('config', 'G-G1T9SRFV67', {
       page_path: url,
     });
   }

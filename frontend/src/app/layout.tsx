@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import { Inter, Roboto } from "next/font/google";
 import "./globals.css";
-import Header from "@/components/Header";
+import Header from "./components/header/Header";
 import Footer from "@/components/Footer";
 import GoogleAnalytics from "./components/GoogleAnalytics";
-import GoogleTagManager from "./components/GoogleTagManager";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -29,12 +28,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
-      <head>
-        <GoogleTagManager gtmId="GTM-XXXXXXX" />
-      </head>
-      <body
-        className={`${inter.variable} ${roboto.variable} antialiased`}
-      >
+      <body className={`${inter.variable} ${roboto.variable} antialiased`}>
         <GoogleAnalytics />
         <Header />
         {children}
