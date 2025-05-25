@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import DropdownButton from './DropdownButton';
 import DropdownMenu from './DropdownMenu';
