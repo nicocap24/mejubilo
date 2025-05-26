@@ -64,7 +64,7 @@ const FAQSection = () => {
             <p className="text-lg text-gray-600 mb-4">
               ¿No encuentras respuesta a tu pregunta?
             </p>
-            <button className="bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 transition-colors">
+            <button className="bg-red-600 text-white px-6 py-3 rounded-full hover:bg-red-700 transition-colors">
               Contáctanos
             </button>
           </div>
