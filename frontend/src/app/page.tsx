@@ -28,7 +28,7 @@ export default function Home() {
         {/* Button */}
         <Link
           href="/evaluacion-previsional"
-          className="w-full max-w-md bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-full text-xl shadow-md transition-colors flex items-center justify-center"
+          className="w-full max-w-md bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-full text-xl shadow-md transition-colors flex items-center justify-center"
         >
           Descubre cómo
         </Link>
