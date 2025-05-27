@@ -38,12 +38,61 @@ export default function ResultadosEvaluacion() {
   
   // Calculate results based on form data
   const calculateResults = () => {
+    const UF_VALUE = 39200; // Valor actual de la UF
+    
     // Base calculations
-    const basePension = saldo * 0.04; // 4% withdrawal rate
-    const pgu = 200000; // Base PGU amount
-    const seguroSocial = 150000; // Base social security amount
+    const basePension = (saldo * 0.0327 * 2) / 12; // Renta Vitalicia: (Saldo*3,27%*2)/12
+    
+    // Calculate PGU based on Renta Vitalicia
+    let pgu = 0;
+    if (basePension < 729764) {
+      pgu = 214296; // PGU máximo cuando Renta Vitalicia < $729.764
+    } else if (basePension > 1158355) {
+      pgu = 0; // No hay PGU cuando Renta Vitalicia > $1.158.355
+    } else {
+      // PGU = $214.296 * ($1.158.355 - Renta Vitalicia) / ($1.158.355 - $729.764)
+      const numerator = 1158355 - basePension;
+      const denominator = 1158355 - 729764;
+      pgu = Math.round(214296 * (numerator / denominator));
+    }
 
-    // Adjust AFP rating based on saldo
+    // Calculate Seguro Social based on saldo
+    let seguroSocial = 0;
+    if (saldo >= 50000000) {
+      seguroSocial = 2.5 * UF_VALUE; // 2.5 UF
+    } else if (saldo >= 25000000) {
+      seguroSocial = 2 * UF_VALUE; // 2 UF
+    }
+
+    // Calculate total pension
+    const totalPension = Math.round(basePension + pgu + seguroSocial);
+
+    // AFP commission rates
+    const afpRates: Record<string, number> = {
+      'PROVIDA': 0.0145,
+      'CUPRUM': 0.0144,
+      'CAPITAL': 0.0144,
+      'HABITAT': 0.0127,
+      'PLANVITAL': 0.0116,
+      'MODELO': 0.0058,
+      'UNO': 0.0049
+    };
+
+    // Calculate annual commission for each AFP
+    const monthlySalary = 1337722; // Average male salary
+    const annualSalary = monthlySalary * 12;
+    const commissions: Record<string, number> = {};
+    for (const [afpName, rate] of Object.entries(afpRates)) {
+      commissions[afpName] = annualSalary * rate;
+    }
+
+    // Find current AFP commission and potential savings
+    const currentAfp = afp.toUpperCase();
+    const currentCommission = commissions[currentAfp] || 0;
+    const lowestCommission = commissions['UNO'];
+    const potentialSavings = currentCommission - lowestCommission;
+
+    // Adjust AFP rating based on saldo and commission rate
     const afpScore = Math.min(100, Math.max(60, 60 + (saldo / 10000000) * 20));
     
     // Adjust fund rating based on age and saldo
@@ -56,7 +105,10 @@ export default function ResultadosEvaluacion() {
           ? "Tu AFP tiene un excelente rendimiento histórico y bajas comisiones"
           : afpScore >= 70
           ? "Tu AFP tiene un buen rendimiento histórico y comisiones moderadas"
-          : "Considera evaluar otras AFPs para mejorar tu rendimiento"
+          : "Considera evaluar otras AFPs para mejorar tu rendimiento",
+        currentCommission: currentCommission,
+        potentialSavings: potentialSavings,
+        commissionRates: afpRates
       },
       fondoRating: {
         score: Math.round(fundScore),
@@ -70,7 +122,7 @@ export default function ResultadosEvaluacion() {
         rentaVitalicia: Math.round(basePension),
         pgu: pgu,
         seguroSocial: seguroSocial,
-        total: Math.round(basePension + pgu + seguroSocial)
+        total: totalPension
       }
     };
   };
@@ -151,10 +203,22 @@ export default function ResultadosEvaluacion() {
           {/* AFP Rating */}
           <div className="bg-gray-50 rounded-xl p-6 text-center">
             <h2 className="text-2xl font-semibold text-gray-800 mb-4">Calificación de tu AFP</h2>
-            <div className={`text-5xl font-bold mb-2 ${getRatingColor(resultados.afpRating.score)}`}>
-              {resultados.afpRating.score}/100
+            <p className="text-lg text-gray-600 mb-4">{resultados.afpRating.details}</p>
+            
+            {/* Commission Information */}
+            <div className="mt-6 border-t border-gray-200 pt-4">
+              <h3 className="text-xl font-semibold text-gray-800 mb-3">Comisiones AFP</h3>
+              <div className="space-y-3">
+                <p className="text-lg">
+                  <span className="font-semibold text-gray-900">Comisión anual actual:</span>{' '}
+                  <span className="text-gray-900">{formatCurrency(resultados.afpRating.currentCommission)}</span>
+                </p>
+                <p className="text-lg">
+                  <span className="font-semibold text-gray-900">Ahorro potencial con AFP UNO:</span>{' '}
+                  <span className="text-gray-900">{formatCurrency(resultados.afpRating.potentialSavings)}</span>
+                </p>
+              </div>
             </div>
-            <p className="text-lg text-gray-600">{resultados.afpRating.details}</p>
           </div>
 
           {/* Fund Rating */}
@@ -171,20 +235,20 @@ export default function ResultadosEvaluacion() {
         <div className="w-full">
           <h2 className="text-2xl font-semibold text-gray-800 mb-6 text-center">Estimación de tu Pensión</h2>
           <div className="space-y-4">
-            <div className="bg-blue-50 rounded-xl p-6 text-center">
-              <h3 className="text-xl font-semibold text-blue-800 mb-2">Renta Vitalicia</h3>
+            <div className="bg-blue-50 rounded-xl p-6 flex justify-center items-center gap-8">
+              <h3 className="text-xl font-semibold text-blue-800">Renta Vitalicia:</h3>
               <p className="text-2xl font-bold text-blue-900">{formatCurrency(resultados.pensionEstimada.rentaVitalicia)}</p>
             </div>
-            <div className="bg-green-50 rounded-xl p-6 text-center">
-              <h3 className="text-xl font-semibold text-green-800 mb-2">PGU</h3>
+            <div className="bg-green-50 rounded-xl p-6 flex justify-center items-center gap-8">
+              <h3 className="text-xl font-semibold text-green-800">PGU:</h3>
               <p className="text-2xl font-bold text-green-900">{formatCurrency(resultados.pensionEstimada.pgu)}</p>
             </div>
-            <div className="bg-purple-50 rounded-xl p-6 text-center">
-              <h3 className="text-xl font-semibold text-purple-800 mb-2">Seguro Social</h3>
+            <div className="bg-purple-50 rounded-xl p-6 flex justify-center items-center gap-8">
+              <h3 className="text-xl font-semibold text-purple-800">Seguro Social:</h3>
               <p className="text-2xl font-bold text-purple-900">{formatCurrency(resultados.pensionEstimada.seguroSocial)}</p>
             </div>
-            <div className="bg-orange-50 rounded-xl p-6 text-center">
-              <h3 className="text-xl font-semibold text-orange-800 mb-2">Total</h3>
+            <div className="bg-orange-50 rounded-xl p-6 flex justify-center items-center gap-8">
+              <h3 className="text-xl font-semibold text-orange-800">Pensión Total:</h3>
               <p className="text-2xl font-bold text-orange-900">{formatCurrency(resultados.pensionEstimada.total)}</p>
             </div>
           </div>
