@@ -48,7 +48,7 @@ const Footer = () => {
                 </a>
               </li>
               <li className="text-orange-50">
-                Santiago, Chile
+                De Chile al 🌎
               </li>
             </ul>
           </div>
