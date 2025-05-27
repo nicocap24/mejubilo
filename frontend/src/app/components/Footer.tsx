@@ -9,7 +9,7 @@ const Footer = () => {
           <div className="space-y-4">
             <h2 className="text-2xl font-bold text-white">MeJubilo</h2>
             <p className="text-orange-50 max-w-xs">
-              Tu compañero en el camino hacia una jubilación segura y tranquila.
+              Información previsional clara e independiente
             </p>
           </div>
 
