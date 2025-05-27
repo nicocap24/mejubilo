@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Roboto } from "next/font/google";
 import "./globals.css";
 import Header from "./components/Header";
-import Footer from "@/components/Footer";
+import Footer from "./components/Footer";
 import GoogleAnalytics from "./components/GoogleAnalytics";
 
 const inter = Inter({
@@ -17,7 +17,7 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
-  title: "MeJubilo - Tu compañero en el camino hacia una jubilación segura",
+  title: "MeJubilo - Información previsional clara e independiente",
   description: "Calcula tu pensión estimada y optimiza tu futuro previsional",
 };
 
