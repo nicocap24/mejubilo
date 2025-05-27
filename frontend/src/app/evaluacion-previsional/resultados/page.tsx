@@ -260,6 +260,12 @@ export default function ResultadosEvaluacion() {
           >
             Obtener Recomendaciones
           </button>
+          <button 
+            onClick={() => router.push('/evaluacion-previsional')}
+            className="w-full bg-orange-400 hover:bg-orange-500 text-white font-bold py-4 rounded-full text-xl shadow-md transition-colors"
+          >
+            Quiero saber
+          </button>
           <div className="text-center">
             <button 
               onClick={() => router.push('/evaluacion-previsional')}

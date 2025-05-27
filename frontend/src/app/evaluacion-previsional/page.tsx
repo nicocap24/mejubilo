@@ -48,8 +48,13 @@ export default function EvaluacionPrevisional() {
         fechaNacimiento: formData.fechaNacimiento
       });
       
-      // Navigate to results page with the parameters
-      router.push(`/evaluacion-previsional/resultados?${params.toString()}`);
+      // Log form data for debugging
+      console.log('Form data:', formData);
+      console.log('URL parameters:', params.toString());
+      
+      // Navigate to results page using Next.js router
+      const resultsUrl = `/evaluacion-previsional/resultados?${params.toString()}`;
+      router.push(resultsUrl);
     } catch (err) {
       console.error('Error submitting form:', err);
       setError(err instanceof Error ? err.message : 'Hubo un error al procesar tu evaluación. Por favor, intenta nuevamente.');
@@ -68,6 +73,7 @@ export default function EvaluacionPrevisional() {
     if (error) setError(null);
   };
 
+  console.log('Renderizando EvaluacionPrevisional');
   return (
     <div className="min-h-screen w-full bg-cover bg-center flex flex-col items-center justify-center px-4" 
          style={{ backgroundImage: 'url(/bg-hero.png)', backgroundColor: 'rgba(255, 255, 255, 0.7)', backgroundBlendMode: 'overlay' }}>
