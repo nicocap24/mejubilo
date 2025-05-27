@@ -1,5 +1,11 @@
 import Airtable from 'airtable';
 
+// Log para verificar la API key (sin mostrar la key completa por seguridad)
+const apiKey = process.env.NEXT_PUBLIC_AIRTABLE_API_KEY;
+console.log('API Key presente:', !!apiKey);
+console.log('API Key longitud:', apiKey?.length);
+console.log('Base ID:', process.env.NEXT_PUBLIC_AIRTABLE_BASE_ID);
+
 if (!process.env.NEXT_PUBLIC_AIRTABLE_API_KEY) {
   throw new Error('NEXT_PUBLIC_AIRTABLE_API_KEY is not defined in environment variables');
 }
@@ -25,7 +31,8 @@ export async function createEvaluation(data: EvaluationData) {
   try {
     console.log('Intentando guardar en Airtable:', {
       table: TABLE_NAME,
-      data: data
+      data: data,
+      apiKeyPresent: !!process.env.NEXT_PUBLIC_AIRTABLE_API_KEY
     });
 
     const fields: Record<string, any> = {

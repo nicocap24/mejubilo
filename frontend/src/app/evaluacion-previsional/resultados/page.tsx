@@ -160,9 +160,23 @@ function ResultadosContent() {
 
       setShowSuccessMessage(true);
       setSubscriptionData({ nombre: '', email: '' });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error al guardar suscripción:', error);
-      setError('Hubo un error al procesar tu suscripción. Por favor, intenta nuevamente.');
+      let errorMsg = 'Hubo un error al procesar tu suscripción. Por favor, intenta nuevamente.';
+      if (error && error.message) {
+        errorMsg += `\nDetalles: ${error.message}`;
+      }
+      if (error && error.statusCode) {
+        errorMsg += `\nStatusCode: ${error.statusCode}`;
+      }
+      if (error && error.response) {
+        errorMsg += `\nResponse: ${JSON.stringify(error.response)}`;
+      }
+      if (error && error.data) {
+        errorMsg += `\nData: ${JSON.stringify(error.data)}`;
+      }
+      errorMsg += `\nError completo: ${JSON.stringify(error)}`;
+      setError(errorMsg);
     }
   };
 
