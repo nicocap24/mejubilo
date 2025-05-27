@@ -22,6 +22,8 @@ function ResultadosContent() {
   const fondo = searchParams.get('fondo') || '';
   const fechaNacimiento = searchParams.get('fechaNacimiento') || '';
 
+  console.log('URL Parameters:', { saldo, afp, fondo, fechaNacimiento });
+
   // Calculate age from birth date
   const calculateAge = (birthDate: string) => {
     const today = new Date();
@@ -98,7 +100,7 @@ function ResultadosContent() {
     // Adjust fund rating based on age and saldo
     const fundScore = Math.min(100, Math.max(60, 60 + (saldo / 10000000) * 15 + (age / 65) * 5));
 
-    return {
+    const resultados = {
       afpRating: {
         score: Math.round(afpScore),
         details: afpScore >= 80 
@@ -125,6 +127,10 @@ function ResultadosContent() {
         total: totalPension
       }
     };
+
+    console.log('Calculated Results:', resultados);
+
+    return resultados;
   };
 
   const resultados = calculateResults();
@@ -151,16 +157,7 @@ function ResultadosContent() {
         throw new Error('Por favor, ingresa tu nombre');
       }
 
-      // Save to Airtable
-      await createEvaluation({
-        nombre: subscriptionData.nombre,
-        email: subscriptionData.email,
-        afp: afp,
-        fondo: fondo,
-        saldo: saldo,
-        fechaNacimiento: fechaNacimiento
-      });
-
+      // No need to save to Airtable again, just show success message
       setSubscriptionMessage('¡Gracias por suscribirte! Te enviaremos información sobre cómo mejorar tu situación previsional.');
       setSubscriptionData({ nombre: '', email: '' });
       // Close modal after successful subscription

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import FormField from './components/FormField';
 import { FORM_FIELDS } from './constants';
+import { createEvaluation } from '../../lib/airtable';
 
 interface FormData {
   afp: string;
@@ -48,22 +49,28 @@ export default function EvaluacionPrevisional() {
         fechaNacimiento: formData.fechaNacimiento
       });
       
-      // Log form data for debugging
-      console.log('Form data:', formData);
-      console.log('URL parameters:', params.toString());
-      
       // Navigate to results page using Next.js router
       const resultsUrl = `/evaluacion-previsional/resultados?${params.toString()}`;
+      
+      // Try to save to Airtable after navigation
       try {
-        await router.push(resultsUrl);
-      } catch (navigationError) {
-        console.error('Navigation error:', navigationError);
-        // Fallback to window.location if router.push fails
-        window.location.href = resultsUrl;
+        await createEvaluation({
+          afp: formData.afp,
+          fondo: formData.fondo,
+          saldo: saldo,
+          fechaNacimiento: formData.fechaNacimiento
+        });
+      } catch (airtableError) {
+        console.error('Airtable error:', airtableError);
+        // Continue with navigation even if Airtable fails
       }
+
+      // Navigate to results
+      router.push(resultsUrl);
     } catch (err) {
-      console.error('Error submitting form:', err);
-      setError(err instanceof Error ? err.message : 'Hubo un error al procesar tu evaluación. Por favor, intenta nuevamente.');
+      const errorMessage = err instanceof Error ? err.message : 'Error desconocido';
+      const fullError = err instanceof Error ? err.stack : JSON.stringify(err);
+      setError(`Error: ${errorMessage}\nDetalles: ${fullError}`);
     } finally {
       setIsSubmitting(false);
     }
