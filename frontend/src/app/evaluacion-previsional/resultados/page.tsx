@@ -2,10 +2,10 @@
 
 import { useSearchParams, useRouter } from 'next/navigation';
 import { formatCurrency } from '../../../utils/formatters';
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { createEvaluation } from '../../../lib/airtable';
 
-export default function ResultadosEvaluacion() {
+function ResultadosContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [subscriptionData, setSubscriptionData] = useState({
@@ -340,5 +340,13 @@ export default function ResultadosEvaluacion() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function ResultadosEvaluacion() {
+  return (
+    <Suspense fallback={<div>Cargando...</div>}>
+      <ResultadosContent />
+    </Suspense>
   );
 } 

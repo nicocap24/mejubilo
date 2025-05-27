@@ -54,7 +54,13 @@ export default function EvaluacionPrevisional() {
       
       // Navigate to results page using Next.js router
       const resultsUrl = `/evaluacion-previsional/resultados?${params.toString()}`;
-      router.push(resultsUrl);
+      try {
+        await router.push(resultsUrl);
+      } catch (navigationError) {
+        console.error('Navigation error:', navigationError);
+        // Fallback to window.location if router.push fails
+        window.location.href = resultsUrl;
+      }
     } catch (err) {
       console.error('Error submitting form:', err);
       setError(err instanceof Error ? err.message : 'Hubo un error al procesar tu evaluación. Por favor, intenta nuevamente.');
