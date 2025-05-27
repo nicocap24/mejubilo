@@ -19,11 +19,11 @@ export default function Home() {
         </div>
         {/* Main Title */}
         <h1 className="text-5xl md:text-6xl font-bold text-center text-gray-900 mb-6">
-          Información previsional clara e independiente
+          ¿Ya quieres jubilar?
         </h1>
         {/* Subtext */}
         <p className="text-2xl text-center text-gray-700 mb-10">
-          Obtén tu evaluación gratuita y descubre cómo optimizar tu pensión
+          Obtén tu evaluación 100% GRATUITA y en segundos para saber cómo vas
         </p>
         {/* Button */}
         <Link
