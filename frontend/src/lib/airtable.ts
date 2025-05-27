@@ -16,6 +16,8 @@ export interface EvaluationData {
   fondo: string;
   saldo: number;
   fechaNacimiento: string;
+  nombre?: string;
+  email?: string;
 }
 
 // Function to create a new evaluation record
@@ -26,15 +28,19 @@ export async function createEvaluation(data: EvaluationData) {
       data: data
     });
 
+    const fields: Record<string, any> = {
+      'FechaNacimiento': data.fechaNacimiento,
+      'AFP': data.afp,
+      'Fondo': data.fondo,
+      'Saldo': data.saldo
+    };
+
+    // Agregar nombre y email solo si están presentes
+    if (data.nombre) fields['Nombre'] = data.nombre;
+    if (data.email) fields['Email'] = data.email;
+
     const record = await base(TABLE_NAME).create([
-      {
-        fields: {
-          'AFP': data.afp,
-          'Fondo': data.fondo,
-          'Saldo': data.saldo,
-          'Fecha de Nacimiento': data.fechaNacimiento
-        },
-      },
+      { fields }
     ]);
 
     console.log('Registro creado exitosamente:', record);

@@ -15,6 +15,8 @@ function ResultadosContent() {
   const [isSubscribing, setIsSubscribing] = useState(false);
   const [subscriptionMessage, setSubscriptionMessage] = useState('');
   const [showModal, setShowModal] = useState(false);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [error, setError] = useState('');
   
   // Get form data from URL parameters
   const saldo = Number(searchParams.get('saldo')) || 0;
@@ -143,33 +145,24 @@ function ResultadosContent() {
 
   const handleSubscriptionSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubscribing(true);
-    setSubscriptionMessage('');
+    if (!subscriptionData.email || !subscriptionData.nombre) return;
 
     try {
-      // Validate email format
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(subscriptionData.email)) {
-        throw new Error('Por favor, ingresa un correo electrónico válido');
-      }
+      // Guardar en Airtable con los datos adicionales
+      await createEvaluation({
+        afp,
+        fondo,
+        saldo: Number(saldo),
+        fechaNacimiento,
+        nombre: subscriptionData.nombre,
+        email: subscriptionData.email
+      });
 
-      if (!subscriptionData.nombre) {
-        throw new Error('Por favor, ingresa tu nombre');
-      }
-
-      // No need to save to Airtable again, just show success message
-      setSubscriptionMessage('¡Gracias por suscribirte! Te enviaremos información sobre cómo mejorar tu situación previsional.');
+      setShowSuccessMessage(true);
       setSubscriptionData({ nombre: '', email: '' });
-      // Close modal after successful subscription
-      setTimeout(() => {
-        setShowModal(false);
-        setSubscriptionMessage('');
-      }, 3000);
     } catch (error) {
-      console.error('Error submitting subscription:', error);
-      setSubscriptionMessage('Hubo un error al procesar tu suscripción. Por favor, intenta nuevamente.');
-    } finally {
-      setIsSubscribing(false);
+      console.error('Error al guardar suscripción:', error);
+      setError('Hubo un error al procesar tu suscripción. Por favor, intenta nuevamente.');
     }
   };
 
@@ -326,9 +319,9 @@ function ResultadosContent() {
                 >
                   {isSubscribing ? 'Enviando...' : 'Recibir Recomendaciones'}
                 </button>
-                {subscriptionMessage && (
-                  <p className={`text-center text-sm ${subscriptionMessage.includes('error') ? 'text-red-600' : 'text-green-600'}`}>
-                    {subscriptionMessage}
+                {error && (
+                  <p className="text-center text-sm text-red-600">
+                    {error}
                   </p>
                 )}
               </form>
