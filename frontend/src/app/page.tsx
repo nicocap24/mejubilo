@@ -23,12 +23,12 @@ export default function Home() {
         </h1>
         {/* Subtext */}
         <p className="text-2xl text-center text-gray-700 mb-10">
-          Obtén tu evaluación 100% GRATUITA y online
+          Obtén tu evaluación 100% GRATUITA y en segundos para saber cómo vas
         </p>
         {/* Button */}
         <Link
           href="/evaluacion-previsional"
-          className="w-full max-w-md bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-full text-xl shadow-md transition-colors flex items-center justify-center"
+          className="w-auto px-8 bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-full text-xl shadow-md transition-colors flex items-center justify-center"
         >
           Descubre cómo
         </Link>
