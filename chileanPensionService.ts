@@ -39,7 +39,7 @@ export function calculateChileanPension(input: ChileanPensionInput): ChileanPens
 
 function calculateRentaVitalicia(afpBalance: number): number {
   // Formula: (Saldo * 3.27% * 2) / 12
-  const rentaVitalicia = ((afpBalance * 0.0327) * 2) / 12;
+  const rentaVitalicia = (afpBalance * 0.0327 * 2) / 12;
   
   // Check if it meets minimum UF requirement (3 UF)
   const rentaVitaliciaInUF = rentaVitalicia / UF_VALUE;

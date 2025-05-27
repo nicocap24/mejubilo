@@ -4,11 +4,8 @@ export interface NavigationItem {
 }
 
 export interface DropdownState {
-  aprende: boolean;
-  precios: boolean;
-  secciones: boolean;
+  otros?: boolean;
   perfil: boolean;
-  leaderboard: boolean;
 }
 
 export interface NavigationSection {
@@ -17,8 +14,5 @@ export interface NavigationSection {
 }
 
 export interface NavigationConfig {
-  aprende: NavigationSection;
-  precios: NavigationSection;
-  secciones: NavigationSection;
-  leaderboard: NavigationSection;
+  [key: string]: NavigationSection;
 } 

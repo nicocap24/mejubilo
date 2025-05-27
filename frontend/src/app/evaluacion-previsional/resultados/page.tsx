@@ -14,6 +14,7 @@ export default function ResultadosEvaluacion() {
   });
   const [isSubscribing, setIsSubscribing] = useState(false);
   const [subscriptionMessage, setSubscriptionMessage] = useState('');
+  const [showModal, setShowModal] = useState(false);
   
   // Get form data from URL parameters
   const saldo = Number(searchParams.get('saldo')) || 0;
@@ -94,6 +95,10 @@ export default function ResultadosEvaluacion() {
         throw new Error('Por favor, ingresa un correo electrónico válido');
       }
 
+      if (!subscriptionData.nombre) {
+        throw new Error('Por favor, ingresa tu nombre');
+      }
+
       // Save to Airtable
       await createEvaluation({
         nombre: subscriptionData.nombre,
@@ -106,6 +111,11 @@ export default function ResultadosEvaluacion() {
 
       setSubscriptionMessage('¡Gracias por suscribirte! Te enviaremos información sobre cómo mejorar tu situación previsional.');
       setSubscriptionData({ nombre: '', email: '' });
+      // Close modal after successful subscription
+      setTimeout(() => {
+        setShowModal(false);
+        setSubscriptionMessage('');
+      }, 3000);
     } catch (error) {
       console.error('Error submitting subscription:', error);
       setSubscriptionMessage('Hubo un error al procesar tu suscripción. Por favor, intenta nuevamente.');
@@ -182,7 +192,10 @@ export default function ResultadosEvaluacion() {
 
         {/* Action Buttons */}
         <div className="mt-12 space-y-4 w-full max-w-md">
-          <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-full text-xl shadow-md transition-colors">
+          <button 
+            onClick={() => setShowModal(true)}
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-full text-xl shadow-md transition-colors"
+          >
             Obtener Recomendaciones
           </button>
           <div className="text-center">
@@ -195,54 +208,68 @@ export default function ResultadosEvaluacion() {
           </div>
         </div>
 
-        {/* Subscription Form */}
-        <div className="mt-12 w-full max-w-md">
-          <div className="bg-gray-50 rounded-xl p-6">
-            <h2 className="text-2xl font-semibold text-gray-800 mb-4 text-center">
-              ¿Quieres recibir información sobre cómo mejorar tu situación previsional?
-            </h2>
-            <form onSubmit={handleSubscriptionSubmit} className="space-y-4">
-              <div>
-                <label className="block text-gray-700 text-sm font-medium mb-2">
-                  Nombre completo
-                </label>
-                <input
-                  type="text"
-                  name="nombre"
-                  value={subscriptionData.nombre}
-                  onChange={handleSubscriptionChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400 focus:border-transparent"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-gray-700 text-sm font-medium mb-2">
-                  Correo electrónico
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  value={subscriptionData.email}
-                  onChange={handleSubscriptionChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400 focus:border-transparent"
-                  required
-                />
-              </div>
+        {/* Modal */}
+        {showModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-2xl p-8 max-w-md w-full relative">
               <button
-                type="submit"
-                disabled={isSubscribing}
-                className="w-full bg-orange-400 hover:bg-orange-500 text-white font-bold py-3 rounded-full text-lg shadow-md transition-colors disabled:bg-orange-300"
+                onClick={() => setShowModal(false)}
+                className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
               >
-                {isSubscribing ? 'Enviando...' : 'Suscribirme'}
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
               </button>
-              {subscriptionMessage && (
-                <p className={`text-center text-sm ${subscriptionMessage.includes('error') ? 'text-red-600' : 'text-green-600'}`}>
-                  {subscriptionMessage}
-                </p>
-              )}
-            </form>
+              
+              <h2 className="text-2xl font-semibold text-gray-800 mb-6 text-center">
+                Recibe recomendaciones personalizadas
+              </h2>
+              
+              <form onSubmit={handleSubscriptionSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-gray-700 text-sm font-medium mb-2">
+                    Nombre completo
+                  </label>
+                  <input
+                    type="text"
+                    name="nombre"
+                    value={subscriptionData.nombre}
+                    onChange={handleSubscriptionChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400 focus:border-transparent"
+                    required
+                    placeholder="Ingresa tu nombre completo"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 text-sm font-medium mb-2">
+                    Correo electrónico
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={subscriptionData.email}
+                    onChange={handleSubscriptionChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400 focus:border-transparent"
+                    required
+                    placeholder="Ingresa tu correo electrónico"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  disabled={isSubscribing}
+                  className="w-full bg-orange-400 hover:bg-orange-500 text-white font-bold py-3 rounded-full text-lg shadow-md transition-colors disabled:bg-orange-300"
+                >
+                  {isSubscribing ? 'Enviando...' : 'Recibir Recomendaciones'}
+                </button>
+                {subscriptionMessage && (
+                  <p className={`text-center text-sm ${subscriptionMessage.includes('error') ? 'text-red-600' : 'text-green-600'}`}>
+                    {subscriptionMessage}
+                  </p>
+                )}
+              </form>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

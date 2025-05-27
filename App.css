@@ -186,3 +186,29 @@ body {
     font-size: 1.2em;
   }
 }
+
+.calculator-selector {
+  display: flex;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.calculator-button {
+  padding: 10px 20px;
+  border: 2px solid #3498db;
+  border-radius: 4px;
+  background: transparent;
+  color: #3498db;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.calculator-button:hover {
+  background: rgba(52, 152, 219, 0.1);
+}
+
+.calculator-button.active {
+  background: #3498db;
+  color: white;
+}

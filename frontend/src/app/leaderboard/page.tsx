@@ -80,6 +80,10 @@ export default function LeaderboardPage() {
           <span className="text-orange-400">Leaderboard</span>
         </h1>
         
+        <p className="text-xl text-center text-gray-700 mb-8">
+          Obtén tu evaluación 100% GRATUITA y en segundos para saber cómo vas
+        </p>
+        
         <div className="w-full">
           <Leaderboard users={sampleUsers} />
         </div>

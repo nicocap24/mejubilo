@@ -1,5 +1,9 @@
 import Airtable from 'airtable';
 
+if (!process.env.NEXT_PUBLIC_AIRTABLE_API_KEY) {
+  throw new Error('NEXT_PUBLIC_AIRTABLE_API_KEY is not defined in environment variables');
+}
+
 // Initialize Airtable
 const base = new Airtable({
   apiKey: process.env.NEXT_PUBLIC_AIRTABLE_API_KEY

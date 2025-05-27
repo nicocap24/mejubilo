@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import './App.css'; // Import the global stylesheet
+import './ChileanPension.css';
 import { fetchEconomicData } from './apiService';
 import { runPensionSimulation } from './simulationService';
+import { calculateChileanPension } from './chileanPensionService';
 import PensionInputPanel from './PensionInputPanel';
 import PensionDisplayPanel from './PensionDisplayPanel';
+import ChileanPensionInputPanel from './ChileanPensionInputPanel';
+import ChileanPensionDisplayPanel from './ChileanPensionDisplayPanel';
 import { EconomicIndicator, SimulationOutput, SimulationInput } from './types';
+import { ChileanPensionOutput } from './chileanPensionService';
 
 // Placeholder API Key - for mock data, this might not be strictly needed by apiService if it defaults to mocks
 const ALPHA_VANTAGE_API_KEY = "YOUR_MOCK_API_KEY";
@@ -14,6 +19,8 @@ const App: React.FC = () => {
   const [isLoadingEconomicData, setIsLoadingEconomicData] = useState<boolean>(true);
   const [simulationResult, setSimulationResult] = useState<SimulationOutput | null>(null);
   const [appError, setAppError] = useState<string | null>(null); // For general app errors, including simulation
+  const [chileanPensionResult, setChileanPensionResult] = useState<ChileanPensionOutput | null>(null);
+  const [activeCalculator, setActiveCalculator] = useState<'uk' | 'chile'>('uk');
 
   // Default initial simulation inputs
   const initialSimulationInputs: SimulationInput = {
@@ -106,10 +113,28 @@ const App: React.FC = () => {
     setSimulationInputs(prev => ({ ...prev, ...inputs }));
   };
 
+  const handleChileanPensionCalculation = (result: ChileanPensionOutput) => {
+    setChileanPensionResult(result);
+  };
+
   return (
     <div className="app-container">
       <header className="app-header">
         <h1>Pension Projection Dashboard</h1>
+        <div className="calculator-selector">
+          <button 
+            className={`calculator-button ${activeCalculator === 'uk' ? 'active' : ''}`}
+            onClick={() => setActiveCalculator('uk')}
+          >
+            UK Pension Calculator
+          </button>
+          <button 
+            className={`calculator-button ${activeCalculator === 'chile' ? 'active' : ''}`}
+            onClick={() => setActiveCalculator('chile')}
+          >
+            Chilean Pension Calculator
+          </button>
+        </div>
       </header>
 
       {isLoadingEconomicData && <p className="loading-message">Loading economic data...</p>}
@@ -122,18 +147,37 @@ const App: React.FC = () => {
 
       {!isLoadingEconomicData && (
         <div className="content-layout">
-          <div className="input-panel-container">
-            <PensionInputPanel 
-              onInputChange={handleSimulationInputChange}
-              initialValues={simulationInputs} 
-            />
-          </div>
-          <div className="display-panel-container">
-            <PensionDisplayPanel
-              economicData={economicData}
-              simulationOutput={simulationResult} 
-            />
-          </div>
+          {activeCalculator === 'uk' ? (
+            <>
+              <div className="input-panel-container">
+                <PensionInputPanel 
+                  onInputChange={handleSimulationInputChange}
+                  initialValues={simulationInputs} 
+                />
+              </div>
+              <div className="display-panel-container">
+                <PensionDisplayPanel
+                  economicData={economicData}
+                  simulationOutput={simulationResult} 
+                />
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="input-panel-container">
+                <ChileanPensionInputPanel 
+                  onCalculationComplete={handleChileanPensionCalculation}
+                />
+              </div>
+              <div className="display-panel-container">
+                {chileanPensionResult && (
+                  <ChileanPensionDisplayPanel
+                    result={chileanPensionResult}
+                  />
+                )}
+              </div>
+            </>
+          )}
         </div>
       )}
     </div>

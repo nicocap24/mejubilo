@@ -2,13 +2,19 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { createEvaluation } from '@/lib/airtable';
+import FormField from './components/FormField';
+import { FORM_FIELDS } from './constants';
+
+interface FormData {
+  afp: string;
+  fondo: string;
+  saldo: string;
+  fechaNacimiento: string;
+}
 
 export default function EvaluacionPrevisional() {
   const router = useRouter();
-  const [formData, setFormData] = useState({
-    nombre: '',
-    email: '',
+  const [formData, setFormData] = useState<FormData>({
     afp: '',
     fondo: '',
     saldo: '',
@@ -23,15 +29,16 @@ export default function EvaluacionPrevisional() {
     setError(null);
 
     try {
-      // Save to Airtable
-      await createEvaluation({
-        nombre: formData.nombre,
-        email: formData.email,
-        afp: formData.afp,
-        fondo: formData.fondo,
-        saldo: Number(formData.saldo),
-        fechaNacimiento: formData.fechaNacimiento
-      });
+      // Validate form data
+      if (!formData.afp || !formData.fondo || !formData.saldo || !formData.fechaNacimiento) {
+        throw new Error('Por favor, completa todos los campos del formulario');
+      }
+
+      // Validate saldo is a positive number
+      const saldo = Number(formData.saldo);
+      if (isNaN(saldo) || saldo <= 0) {
+        throw new Error('Por favor, ingresa un saldo válido');
+      }
 
       // Create URL parameters with the form data
       const params = new URLSearchParams({
@@ -44,8 +51,8 @@ export default function EvaluacionPrevisional() {
       // Navigate to results page with the parameters
       router.push(`/evaluacion-previsional/resultados?${params.toString()}`);
     } catch (err) {
-      setError('Hubo un error al guardar tu evaluación. Por favor, intenta nuevamente.');
       console.error('Error submitting form:', err);
+      setError(err instanceof Error ? err.message : 'Hubo un error al procesar tu evaluación. Por favor, intenta nuevamente.');
     } finally {
       setIsSubmitting(false);
     }
@@ -57,10 +64,9 @@ export default function EvaluacionPrevisional() {
       ...prev,
       [name]: value
     }));
+    // Clear error when user starts typing
+    if (error) setError(null);
   };
-
-  const inputStyles = "w-64 md:w-72 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 text-lg";
-  const labelStyles = "block text-lg font-medium text-gray-700 mb-2 text-center";
 
   return (
     <div className="min-h-screen w-full bg-cover bg-center flex flex-col items-center justify-center px-4" 
@@ -82,112 +88,15 @@ export default function EvaluacionPrevisional() {
 
         <form onSubmit={handleSubmit} className="w-full space-y-8 flex flex-col items-center">
           <div className="space-y-6 flex flex-col items-center">
-            <div className="text-center">
-              <label htmlFor="nombre" className={labelStyles}>
-                Nombre completo
-              </label>
-              <input
-                type="text"
-                id="nombre"
-                name="nombre"
-                required
-                value={formData.nombre}
+            {FORM_FIELDS.map((field) => (
+              <FormField
+                key={field.id}
+                {...field}
+                value={formData[field.name as keyof FormData]}
                 onChange={handleChange}
-                placeholder="Ingresa tu nombre completo"
-                className={inputStyles}
+                required
               />
-            </div>
-
-            <div className="text-center">
-              <label htmlFor="email" className={labelStyles}>
-                Correo electrónico
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                required
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="Ingresa tu correo electrónico"
-                className={inputStyles}
-              />
-            </div>
-
-            <div className="text-center">
-              <label htmlFor="afp" className={labelStyles}>
-                AFP
-              </label>
-              <select
-                id="afp"
-                name="afp"
-                required
-                value={formData.afp}
-                onChange={handleChange}
-                className={inputStyles}
-              >
-                <option value="">Selecciona tu AFP</option>
-                <option value="capital">Capital</option>
-                <option value="cuprum">Cuprum</option>
-                <option value="habitat">Habitat</option>
-                <option value="modelo">Modelo</option>
-                <option value="planvital">PlanVital</option>
-                <option value="provida">ProVida</option>
-                <option value="uno">Uno</option>
-              </select>
-            </div>
-
-            <div className="text-center">
-              <label htmlFor="fondo" className={labelStyles}>
-                Fondo
-              </label>
-              <select
-                id="fondo"
-                name="fondo"
-                required
-                value={formData.fondo}
-                onChange={handleChange}
-                className={inputStyles}
-              >
-                <option value="">Selecciona tu fondo</option>
-                <option value="A">Fondo A</option>
-                <option value="B">Fondo B</option>
-                <option value="C">Fondo C</option>
-                <option value="D">Fondo D</option>
-                <option value="E">Fondo E</option>
-              </select>
-            </div>
-
-            <div className="text-center">
-              <label htmlFor="saldo" className={labelStyles}>
-                Saldo actual
-              </label>
-              <input
-                type="number"
-                id="saldo"
-                name="saldo"
-                required
-                value={formData.saldo}
-                onChange={handleChange}
-                placeholder="Ingresa tu saldo actual"
-                className={inputStyles}
-              />
-            </div>
-
-            <div className="text-center">
-              <label htmlFor="fechaNacimiento" className={labelStyles}>
-                Fecha de nacimiento
-              </label>
-              <input
-                type="date"
-                id="fechaNacimiento"
-                name="fechaNacimiento"
-                required
-                value={formData.fechaNacimiento}
-                onChange={handleChange}
-                className={inputStyles}
-              />
-            </div>
+            ))}
           </div>
 
           <button
@@ -199,7 +108,9 @@ export default function EvaluacionPrevisional() {
           </button>
 
           {error && (
-            <p className="text-red-600 text-center mt-4">{error}</p>
+            <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-red-600 text-center">{error}</p>
+            </div>
           )}
         </form>
       </div>
