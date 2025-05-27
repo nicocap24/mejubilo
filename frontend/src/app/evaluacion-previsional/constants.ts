@@ -20,16 +20,18 @@ export const FORM_FIELDS = [
   {
     id: 'afp',
     name: 'afp',
-    label: 'AFP',
+    label: '',
     type: 'select',
-    options: AFP_OPTIONS
+    options: AFP_OPTIONS,
+    placeholder: 'Elige tu AFP'
   },
   {
     id: 'fondo',
     name: 'fondo',
-    label: 'Fondo',
+    label: '',
     type: 'select',
-    options: FONDO_OPTIONS
+    options: FONDO_OPTIONS,
+    placeholder: 'Elige tu fondo'
   },
   {
     id: 'saldo',

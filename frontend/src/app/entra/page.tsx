@@ -34,9 +34,6 @@ export default function SignupPage() {
 
         <form onSubmit={handleSubmit} className="w-full space-y-6">
           <div>
-            <label className="block text-gray-700 text-sm font-medium mb-2">
-              AFP
-            </label>
             <select
               name="afp"
               value={formData.afp}
@@ -44,7 +41,7 @@ export default function SignupPage() {
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400 focus:border-transparent"
               required
             >
-              <option value="">Selecciona tu AFP</option>
+              <option value="">Elige tu AFP</option>
               <option value="capital">Capital</option>
               <option value="cuprum">Cuprum</option>
               <option value="habitat">Habitat</option>

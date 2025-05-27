@@ -203,11 +203,9 @@ export default function ResultadosEvaluacion() {
           {/* AFP Rating */}
           <div className="bg-gray-50 rounded-xl p-6 text-center">
             <h2 className="text-2xl font-semibold text-gray-800 mb-4">Calificación de tu AFP</h2>
-            <p className="text-lg text-gray-600 mb-4">{resultados.afpRating.details}</p>
             
             {/* Commission Information */}
             <div className="mt-6 border-t border-gray-200 pt-4">
-              <h3 className="text-xl font-semibold text-gray-800 mb-3">Comisiones AFP</h3>
               <div className="space-y-3">
                 <p className="text-lg">
                   <span className="font-semibold text-gray-900">Comisión anual actual:</span>{' '}
