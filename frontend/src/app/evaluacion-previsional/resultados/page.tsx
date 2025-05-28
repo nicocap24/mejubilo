@@ -230,7 +230,8 @@ function ResultadosContent() {
           afp,
           fondo,
           saldo,
-          fechaNacimiento
+          fechaNacimiento,
+          to: 'nico@pensionfi.com'
         }),
       });
 
@@ -276,8 +277,84 @@ function ResultadosContent() {
           Resultados de tu Evaluación
         </h1>
 
+        {/* Ratings Section */}
+        <div className="w-full space-y-8 mb-12">
+          {/* AFP Rating */}
+          <div className="bg-gray-50 rounded-xl p-6 text-center">
+            <h2 className="text-2xl font-semibold text-gray-800 mb-4">Calificación de tu AFP</h2>
+            <div className={`text-5xl font-bold mb-2 ${getRatingColor(resultados.afpRating.score)}`}>
+              {resultados.afpRating.score}/100
+            </div>
+            <p className="text-lg text-gray-600 mb-4">{resultados.afpRating.details}</p>
+            
+            {/* Commission Information */}
+            <div className="mt-6 border-t border-gray-200 pt-4">
+              <div className="space-y-3">
+                <p className="text-lg">
+                  <span className="font-semibold text-gray-900">Comisión anual actual:</span>{' '}
+                  <span className="text-gray-900">{formatCurrency(resultados.afpRating.currentCommission)}</span>
+                </p>
+                <p className="text-lg">
+                  <span className="font-semibold text-gray-900">Ahorro potencial con AFP UNO:</span>{' '}
+                  <span className="text-gray-900">{formatCurrency(resultados.afpRating.potentialSavings)}</span>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Fund Rating */}
+          <div className="bg-gray-50 rounded-xl p-6 text-center">
+            <h2 className="text-2xl font-semibold text-gray-800 mb-4">Calificación de tu Fondo</h2>
+            <div className={`text-5xl font-bold mb-2 ${getRatingColor(resultados.fondoRating.score)}`}>
+              {resultados.fondoRating.score}/100
+            </div>
+            <p className="text-lg text-gray-600">{resultados.fondoRating.details}</p>
+          </div>
+        </div>
+
+        {/* Pension Estimation Section */}
+        <div className="w-full">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-6 text-center">Estimación de tu Pensión</h2>
+          <div className="space-y-4">
+            <div className="bg-blue-50 rounded-xl p-6 flex justify-center items-center gap-8">
+              <h3 className="text-xl font-semibold text-blue-800">Renta Vitalicia:</h3>
+              <p className="text-2xl font-bold text-blue-900">{formatCurrency(resultados.pensionEstimada.rentaVitalicia)}</p>
+            </div>
+            <div className="bg-green-50 rounded-xl p-6 flex justify-center items-center gap-8">
+              <h3 className="text-xl font-semibold text-green-800">PGU:</h3>
+              <p className="text-2xl font-bold text-green-900">{formatCurrency(resultados.pensionEstimada.pgu)}</p>
+            </div>
+            <div className="bg-purple-50 rounded-xl p-6 flex justify-center items-center gap-8">
+              <h3 className="text-xl font-semibold text-purple-800">Seguro Social:</h3>
+              <p className="text-2xl font-bold text-purple-900">{formatCurrency(resultados.pensionEstimada.seguroSocial)}</p>
+            </div>
+            <div className="bg-orange-50 rounded-xl p-6 flex justify-center items-center gap-8">
+              <h3 className="text-xl font-semibold text-orange-800">Pensión Total:</h3>
+              <p className="text-2xl font-bold text-orange-900">{formatCurrency(resultados.pensionEstimada.total)}</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="mt-12 space-y-4 w-full max-w-md">
+          <button 
+            onClick={() => setShowModal(true)}
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-full text-xl shadow-md transition-colors"
+          >
+            Obtener Recomendaciones
+          </button>
+          <div className="text-center">
+            <button 
+              onClick={() => router.push('/evaluacion-previsional')}
+              className="text-sm text-gray-600 hover:text-gray-800 transition-colors"
+            >
+              volver a evaluar
+            </button>
+          </div>
+        </div>
+
         {/* Feedback Section */}
-        <div className="w-full flex justify-center items-center gap-4 mb-8">
+        <div className="w-full flex justify-center items-center gap-4 mt-8">
           <button
             onClick={() => handleRatingClick('up')}
             className="p-2 hover:bg-gray-100 rounded-full transition-colors"
@@ -328,147 +405,6 @@ function ResultadosContent() {
             </div>
           </div>
         )}
-
-        {/* Ratings Section */}
-        <div className="w-full space-y-8 mb-12">
-          {/* AFP Rating */}
-          <div className="bg-gray-50 rounded-xl p-6 text-center">
-            <h2 className="text-2xl font-semibold text-gray-800 mb-4">Calificación de tu AFP</h2>
-            
-            {/* Commission Information */}
-            <div className="mt-6 border-t border-gray-200 pt-4">
-              <div className="space-y-3">
-                <p className="text-lg">
-                  <span className="font-semibold text-gray-900">Comisión anual actual:</span>{' '}
-                  <span className="text-gray-900">{formatCurrency(resultados.afpRating.currentCommission)}</span>
-                </p>
-                <p className="text-lg">
-                  <span className="font-semibold text-gray-900">Ahorro potencial con AFP UNO:</span>{' '}
-                  <span className="text-gray-900">{formatCurrency(resultados.afpRating.potentialSavings)}</span>
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Fund Rating */}
-          <div className="bg-gray-50 rounded-xl p-6 text-center">
-            <h2 className="text-2xl font-semibold text-gray-800 mb-4">Calificación de tu Fondo</h2>
-            <div className={`text-5xl font-bold mb-2 ${getRatingColor(resultados.fondoRating.score)}`}>
-              {resultados.fondoRating.score}/100
-            </div>
-            <p className="text-lg text-gray-600">{resultados.fondoRating.details}</p>
-          </div>
-        </div>
-
-        {/* Pension Estimation Section */}
-        <div className="w-full">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-6 text-center">Estimación de tu Pensión</h2>
-          <div className="space-y-4">
-            <div className="bg-blue-50 rounded-xl p-6 flex justify-center items-center gap-8">
-              <h3 className="text-xl font-semibold text-blue-800">Renta Vitalicia:</h3>
-              <p className="text-2xl font-bold text-blue-900">{formatCurrency(resultados.pensionEstimada.rentaVitalicia)}</p>
-            </div>
-            <div className="bg-green-50 rounded-xl p-6 flex justify-center items-center gap-8">
-              <h3 className="text-xl font-semibold text-green-800">PGU:</h3>
-              <p className="text-2xl font-bold text-green-900">{formatCurrency(resultados.pensionEstimada.pgu)}</p>
-            </div>
-            <div className="bg-purple-50 rounded-xl p-6 flex justify-center items-center gap-8">
-              <h3 className="text-xl font-semibold text-purple-800">Seguro Social:</h3>
-              <p className="text-2xl font-bold text-purple-900">{formatCurrency(resultados.pensionEstimada.seguroSocial)}</p>
-            </div>
-            <div className="bg-orange-50 rounded-xl p-6 flex justify-center items-center gap-8">
-              <h3 className="text-xl font-semibold text-orange-800">Pensión Total:</h3>
-              <p className="text-2xl font-bold text-orange-900">{formatCurrency(resultados.pensionEstimada.total)}</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Supuestos Section */}
-        <div className="w-full mt-8">
-          <details className="bg-gray-50 rounded-xl p-6">
-            <summary className="text-xl font-semibold text-gray-800 cursor-pointer hover:text-gray-600">
-              Supuestos detrás de esta estimación
-            </summary>
-            <div className="mt-4 space-y-4 text-gray-600">
-              <div>
-                <h3 className="font-semibold text-gray-700 mb-2">Genericos:</h3>
-                <ul className="list-disc pl-5 space-y-1">
-                  <li>Eres hombre.</li>
-                  <li>Estàs solicitando una pensiòn de vejez, no una pensiòn anticipada, ni de invalidez ni de sobrevivencia.</li>
-                  <li>Tienes 65 años de edad, es decir estàs en edad legal de jubilar.</li>
-                  <li>No tienes ninguna discapacidad, ni total ni parcial.</li>
-                  <li>Se usa el Valor UF del día de hoy según el Servicio de Impuestos internos: 39000</li>
-                </ul>
-              </div>
-
-              <div>
-                <h3 className="font-semibold text-gray-700 mb-2">Calculo Renta Vitalicia:</h3>
-                <ul className="list-disc pl-5 space-y-1">
-                  <li>Tu grupo familiar es: Soltero, sin conyuge/madre de hijos sin afiliación matrimonial y sin hijos.</li>
-                  <li>Quieres jubilar hoy con el saldo ingresado, es decir no hay supuestos de rentabilidad futura o si cotizarás o no en el futuro. Estamos asumiendo que quieres jubilar hoy con lo que tienes ahora.</li>
-                  <li>Estàs interesado en poder optar por una renta vitalicia (y no quedarte en la AFP en retiro programado)</li>
-                  <li>Para poder optar por una renta vitalicia por ley debes poder obtener una renta vitalicia mayor a 2 UF segùn la reforma. Si no cumples este requisito se asume que no podrás jubilar y tu pensión es igual a 0.</li>
-                  <li>La tasa ocupada para calcular la renta vitalicia es última tasa promedio de toda la industria para pensión de vejez disponible por la Super de Pensiones en este link. este caso es: 3.27%</li>
-                  <li>Para el calculo de la renta vitalicia se multiplica la tasa por 2 y por el saldo y el resultado se divide por 12. $735,750</li>
-                </ul>
-              </div>
-
-              <div>
-                <h3 className="font-semibold text-gray-700 mb-2">Calculo Seguro Social:</h3>
-                <ul className="list-disc pl-5 space-y-1">
-                  <li>Para los hombres se pide un minimo de 20 años cotizados y un máximo de 25.</li>
-                  <li>El beneficio es de 0,1 UF por año cotizado</li>
-                  <li>No te pedimos años cotizados en esta simulaciòn asique lo estimamos en base al saldo ingresado; Si tienes más de $50,000,000 de saldo se asume que cotizaste al menos 20 años, si tienes más de $100,000,000 se asume que has cotizado 25 años o más.</li>
-                </ul>
-              </div>
-
-              <div>
-                <h3 className="font-semibold text-gray-700 mb-2">Calculo PGU:</h3>
-                <ul className="list-disc pl-5 space-y-1">
-                  <li>Se asume que estás dentro del 90% menos rico del país, segùn el Registro Social de Hogares.</li>
-                  <li>Eres chileno y resides en Chile por 20 años continuos o discontinuos desde que tienes 20 años y en 4 de los últimos 5 años.</li>
-                  <li>Es decir que calificas para PGU.</li>
-                  <li>Se asume que aumento de PGU estipulado en la reforma aún no llega a tu grupo etario.</li>
-                </ul>
-              </div>
-
-              <div>
-                <h3 className="font-semibold text-gray-700 mb-2">Calculo Total:</h3>
-                <ul className="list-disc pl-5 space-y-1">
-                  <li>Tu pensión total es la sumatoria de renta vitalicia, seguro social y PGU. Se asume que no tienes otros ingresos pasivos cómo propiedades etc.</li>
-                </ul>
-              </div>
-
-              <div className="mt-4 text-sm text-gray-500">
-                <p>Si tienes preguntas o sugerencias respecto de estos calculos favor contactanos acá: email to: nico@pensionfi.com</p>
-              </div>
-            </div>
-          </details>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="mt-12 space-y-4 w-full max-w-md">
-          <button 
-            onClick={() => setShowModal(true)}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-full text-xl shadow-md transition-colors"
-          >
-            Obtener Recomendaciones
-          </button>
-          <button 
-            onClick={() => router.push('/evaluacion-previsional')}
-            className="w-full bg-orange-400 hover:bg-orange-500 text-white font-bold py-4 rounded-full text-xl shadow-md transition-colors"
-          >
-            Quiero saber
-          </button>
-          <div className="text-center">
-            <button 
-              onClick={() => router.push('/evaluacion-previsional')}
-              className="text-sm text-gray-600 hover:text-gray-800 transition-colors"
-            >
-              volver a evaluar
-            </button>
-          </div>
-        </div>
 
         {/* Modal */}
         {showModal && (
