@@ -12,7 +12,7 @@ export default function Header() {
           </div>
           <nav className="hidden md:flex space-x-8 items-center">
             <Link 
-              href="/entra" 
+              href="/evaluacion-previsional" 
               className="bg-orange-400 hover:bg-orange-500 text-white font-bold px-6 py-2 rounded-full transition-colors"
             >
               Quiero saber
