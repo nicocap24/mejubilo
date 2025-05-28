@@ -4,7 +4,6 @@ import "./globals.css";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import GoogleAnalytics from "./components/GoogleAnalytics";
-import Script from "next/script";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -29,24 +28,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
-      <head>
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5179832879235237"
-          crossOrigin="anonymous"
-        />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.adsbygoogle = window.adsbygoogle || [];
-              window.adsbygoogle.push({
-                google_ad_client: "ca-pub-5179832879235237",
-                enable_page_level_ads: true
-              });
-            `,
-          }}
-        />
-      </head>
+      <head />
       <body className={`${inter.variable} ${roboto.variable} antialiased`}>
         <GoogleAnalytics />
         <Header />
