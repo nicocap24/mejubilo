@@ -18,6 +18,13 @@ export const FONDO_OPTIONS = [
 
 export const FORM_FIELDS = [
   {
+    id: 'nombre',
+    name: 'nombre',
+    label: 'Nombre completo',
+    type: 'text',
+    placeholder: 'Ingresa tu nombre completo'
+  },
+  {
     id: 'afp',
     name: 'afp',
     label: '',
@@ -45,5 +52,12 @@ export const FORM_FIELDS = [
     name: 'fechaNacimiento',
     label: 'Fecha de nacimiento',
     type: 'date'
+  },
+  {
+    id: 'email',
+    name: 'email',
+    label: 'Correo electrónico',
+    type: 'email',
+    placeholder: 'Ingresa tu correo electrónico'
   }
 ]; 

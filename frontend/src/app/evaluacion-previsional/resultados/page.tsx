@@ -3,7 +3,7 @@
 import { useSearchParams, useRouter } from 'next/navigation';
 import { formatCurrency } from '../../../utils/formatters';
 import { useState, Suspense } from 'react';
-import { createEvaluation } from '../../../lib/airtable';
+import { FaThumbsUp, FaThumbsDown } from 'react-icons/fa';
 
 function ResultadosContent() {
   const searchParams = useSearchParams();
@@ -17,12 +17,19 @@ function ResultadosContent() {
   const [showModal, setShowModal] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [error, setError] = useState('');
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+  const [feedback, setFeedback] = useState({
+    rating: '',
+    comment: ''
+  });
+  const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
   
   // Get form data from URL parameters
-  const saldo = Number(searchParams.get('saldo')) || 0;
-  const afp = searchParams.get('afp') || '';
-  const fondo = searchParams.get('fondo') || '';
-  const fechaNacimiento = searchParams.get('fechaNacimiento') || '';
+  const saldo = Number(searchParams?.get('saldo')) || 0;
+  const afp = searchParams?.get('afp') || '';
+  const fondo = searchParams?.get('fondo') || '';
+  const fechaNacimiento = searchParams?.get('fechaNacimiento') || '';
+  const recordId = searchParams?.get('recordId') || '';
 
   console.log('URL Parameters:', { saldo, afp, fondo, fechaNacimiento });
 
@@ -148,16 +155,27 @@ function ResultadosContent() {
     if (!subscriptionData.email || !subscriptionData.nombre) return;
 
     try {
-      // Guardar en Airtable con los datos adicionales
-      await createEvaluation({
-        afp,
-        fondo,
-        saldo: Number(saldo),
-        fechaNacimiento,
-        nombre: subscriptionData.nombre,
-        email: subscriptionData.email
+      const response = await fetch('/api/evaluations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          afp,
+          fondo,
+          saldo: Number(saldo),
+          fechaNacimiento,
+          nombre: subscriptionData.nombre,
+          email: subscriptionData.email,
+          recordId
+        }),
       });
 
+      if (!response.ok) {
+        throw new Error(`Error al guardar: ${response.statusText}`);
+      }
+
+      const result = await response.json();
       setShowSuccessMessage(true);
       setSubscriptionData({ nombre: '', email: '' });
     } catch (error: any) {
@@ -188,6 +206,46 @@ function ResultadosContent() {
     }));
   };
 
+  const handleFeedbackSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const response = await fetch('/api/feedback', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          rating: feedback.rating,
+          comment: feedback.comment,
+          email: 'nico@pensionfi.com'
+        }),
+      });
+
+      if (response.ok) {
+        setFeedbackSubmitted(true);
+        setShowFeedbackModal(false);
+        setFeedback({ rating: '', comment: '' });
+      }
+    } catch (error) {
+      console.error('Error submitting feedback:', error);
+    }
+  };
+
+  const handleFeedbackChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setFeedback(prev => ({
+      ...prev,
+      comment: e.target.value
+    }));
+  };
+
+  const handleRatingClick = (rating: 'up' | 'down') => {
+    setFeedback(prev => ({
+      ...prev,
+      rating
+    }));
+    setShowFeedbackModal(true);
+  };
+
   return (
     <div className="min-h-screen w-full bg-cover bg-center flex flex-col items-center justify-center px-4" 
          style={{ backgroundImage: 'url(/bg-hero.png)', backgroundColor: 'rgba(255, 255, 255, 0.7)', backgroundBlendMode: 'overlay' }}>
@@ -201,6 +259,85 @@ function ResultadosContent() {
         <h1 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-4 md:mb-6">
           Resultados de tu Evaluación
         </h1>
+
+        {/* Feedback Section */}
+        <div className="w-full flex justify-center items-center gap-4 mb-8">
+          <button
+            onClick={() => handleRatingClick('up')}
+            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+            aria-label="Thumbs up"
+          >
+            <FaThumbsUp className="text-2xl text-green-500" />
+          </button>
+          <button
+            onClick={() => handleRatingClick('down')}
+            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+            aria-label="Thumbs down"
+          >
+            <FaThumbsDown className="text-2xl text-red-500" />
+          </button>
+          <button
+            onClick={() => setShowFeedbackModal(true)}
+            className="text-blue-600 hover:text-blue-800 font-medium"
+          >
+            Enviar feedback
+          </button>
+        </div>
+
+        {/* Feedback Modal */}
+        {showFeedbackModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+              <h3 className="text-xl font-semibold mb-4">Enviar Feedback</h3>
+              <form onSubmit={handleFeedbackSubmit}>
+                <div className="mb-4">
+                  <label className="block text-gray-700 text-sm font-bold mb-2">
+                    Comentarios
+                  </label>
+                  <textarea
+                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    rows={4}
+                    value={feedback.comment}
+                    onChange={handleFeedbackChange}
+                    placeholder="Escribe tus comentarios aquí..."
+                    required
+                  />
+                </div>
+                <div className="flex justify-end gap-4">
+                  <button
+                    type="button"
+                    onClick={() => setShowFeedbackModal(false)}
+                    className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                  >
+                    Enviar
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* Success Message */}
+        {feedbackSubmitted && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4 text-center">
+              <h3 className="text-xl font-semibold mb-2">¡Gracias por tu feedback!</h3>
+              <p className="text-gray-600 mb-4">Tu opinión es muy importante para nosotros.</p>
+              <button
+                onClick={() => setFeedbackSubmitted(false)}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              >
+                Cerrar
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Ratings Section */}
         <div className="w-full space-y-8 mb-12">
@@ -254,6 +391,69 @@ function ResultadosContent() {
               <p className="text-2xl font-bold text-orange-900">{formatCurrency(resultados.pensionEstimada.total)}</p>
             </div>
           </div>
+        </div>
+
+        {/* Supuestos Section */}
+        <div className="w-full mt-8">
+          <details className="bg-gray-50 rounded-xl p-6">
+            <summary className="text-xl font-semibold text-gray-800 cursor-pointer hover:text-gray-600">
+              Supuestos detrás de esta estimación
+            </summary>
+            <div className="mt-4 space-y-4 text-gray-600">
+              <div>
+                <h3 className="font-semibold text-gray-700 mb-2">Genericos:</h3>
+                <ul className="list-disc pl-5 space-y-1">
+                  <li>Eres hombre.</li>
+                  <li>Estàs solicitando una pensiòn de vejez, no una pensiòn anticipada, ni de invalidez ni de sobrevivencia.</li>
+                  <li>Tienes 65 años de edad, es decir estàs en edad legal de jubilar.</li>
+                  <li>No tienes ninguna discapacidad, ni total ni parcial.</li>
+                  <li>Se usa el Valor UF del día de hoy según el Servicio de Impuestos internos: 39000</li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="font-semibold text-gray-700 mb-2">Calculo Renta Vitalicia:</h3>
+                <ul className="list-disc pl-5 space-y-1">
+                  <li>Tu grupo familiar es: Soltero, sin conyuge/madre de hijos sin afiliación matrimonial y sin hijos.</li>
+                  <li>Quieres jubilar hoy con el saldo ingresado, es decir no hay supuestos de rentabilidad futura o si cotizarás o no en el futuro. Estamos asumiendo que quieres jubilar hoy con lo que tienes ahora.</li>
+                  <li>Estàs interesado en poder optar por una renta vitalicia (y no quedarte en la AFP en retiro programado)</li>
+                  <li>Para poder optar por una renta vitalicia por ley debes poder obtener una renta vitalicia mayor a 2 UF segùn la reforma. Si no cumples este requisito se asume que no podrás jubilar y tu pensión es igual a 0.</li>
+                  <li>La tasa ocupada para calcular la renta vitalicia es última tasa promedio de toda la industria para pensión de vejez disponible por la Super de Pensiones en este link. este caso es: 3.27%</li>
+                  <li>Para el calculo de la renta vitalicia se multiplica la tasa por 2 y por el saldo y el resultado se divide por 12. $735,750</li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="font-semibold text-gray-700 mb-2">Calculo Seguro Social:</h3>
+                <ul className="list-disc pl-5 space-y-1">
+                  <li>Para los hombres se pide un minimo de 20 años cotizados y un máximo de 25.</li>
+                  <li>El beneficio es de 0,1 UF por año cotizado</li>
+                  <li>No te pedimos años cotizados en esta simulaciòn asique lo estimamos en base al saldo ingresado; Si tienes más de $50,000,000 de saldo se asume que cotizaste al menos 20 años, si tienes más de $100,000,000 se asume que has cotizado 25 años o más.</li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="font-semibold text-gray-700 mb-2">Calculo PGU:</h3>
+                <ul className="list-disc pl-5 space-y-1">
+                  <li>Se asume que estás dentro del 90% menos rico del país, segùn el Registro Social de Hogares.</li>
+                  <li>Eres chileno y resides en Chile por 20 años continuos o discontinuos desde que tienes 20 años y en 4 de los últimos 5 años.</li>
+                  <li>Es decir que calificas para PGU.</li>
+                  <li>Se asume que aumento de PGU estipulado en la reforma aún no llega a tu grupo etario.</li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="font-semibold text-gray-700 mb-2">Calculo Total:</h3>
+                <ul className="list-disc pl-5 space-y-1">
+                  <li>Tu pensión total es la sumatoria de renta vitalicia, seguro social y PGU. Se asume que no tienes otros ingresos pasivos cómo propiedades etc.</li>
+                </ul>
+              </div>
+
+              <div className="mt-4 text-sm text-gray-500">
+                <p>Si tienes preguntas o sugerencias respecto de estos calculos favor contactanos acá: email to: nico@pensionfi.com</p>
+              </div>
+            </div>
+          </details>
         </div>
 
         {/* Action Buttons */}

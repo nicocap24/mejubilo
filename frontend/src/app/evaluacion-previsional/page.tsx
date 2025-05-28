@@ -4,22 +4,25 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import FormField from './components/FormField';
 import { FORM_FIELDS } from './constants';
-import { createEvaluation } from '../../lib/airtable';
 
 interface FormData {
+  nombre: string;
   afp: string;
   fondo: string;
   saldo: string;
   fechaNacimiento: string;
+  email: string;
 }
 
 export default function EvaluacionPrevisional() {
   const router = useRouter();
   const [formData, setFormData] = useState<FormData>({
+    nombre: '',
     afp: '',
     fondo: '',
     saldo: '',
-    fechaNacimiento: ''
+    fechaNacimiento: '',
+    email: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -31,8 +34,14 @@ export default function EvaluacionPrevisional() {
 
     try {
       // Validate form data
-      if (!formData.afp || !formData.fondo || !formData.saldo || !formData.fechaNacimiento) {
+      if (!formData.nombre || !formData.afp || !formData.fondo || !formData.saldo || !formData.fechaNacimiento || !formData.email) {
         throw new Error('Por favor, completa todos los campos del formulario');
+      }
+
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email)) {
+        throw new Error('Por favor, ingresa un correo electrónico válido');
       }
 
       // Validate saldo is a positive number
@@ -41,36 +50,63 @@ export default function EvaluacionPrevisional() {
         throw new Error('Por favor, ingresa un saldo válido');
       }
 
-      // Create URL parameters with the form data
-      const params = new URLSearchParams({
-        afp: formData.afp,
-        fondo: formData.fondo,
-        saldo: formData.saldo,
-        fechaNacimiento: formData.fechaNacimiento
-      });
-      
-      // Navigate to results page using Next.js router
-      const resultsUrl = `/evaluacion-previsional/resultados?${params.toString()}`;
-      
-      // Try to save to Airtable after navigation
+      // Save data to our backend first
       try {
-        await createEvaluation({
+        console.log('Sending form data:', {
+          nombre: formData.nombre,
           afp: formData.afp,
           fondo: formData.fondo,
           saldo: saldo,
-          fechaNacimiento: formData.fechaNacimiento
+          fechaNacimiento: formData.fechaNacimiento,
+          email: formData.email
         });
-      } catch (airtableError) {
-        console.error('Airtable error:', airtableError);
-        // Continue with navigation even if Airtable fails
-      }
 
-      // Navigate to results
-      router.push(resultsUrl);
+        const response = await fetch(`api/evaluations`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            nombre: formData.nombre,
+            afp: formData.afp,
+            fondo: formData.fondo,
+            saldo: saldo,
+            fechaNacimiento: formData.fechaNacimiento,
+            email: formData.email
+          }),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Error al guardar los datos');
+        }
+
+        const data = await response.json();
+        console.log('Server response:', data);
+        
+        // Create URL parameters with the form data and recordId
+        const params = new URLSearchParams({
+          nombre: formData.nombre,
+          afp: formData.afp,
+          fondo: formData.fondo,
+          saldo: formData.saldo,
+          fechaNacimiento: formData.fechaNacimiento,
+          email: formData.email,
+          recordId: data.recordId
+        });
+        
+        // Navigate to results page using Next.js router
+        const resultsUrl = `/evaluacion-previsional/resultados?${params.toString()}`;
+        router.push(resultsUrl);
+      } catch (saveError) {
+        console.error('Error al guardar:', saveError);
+        throw new Error(saveError instanceof Error ? saveError.message : 'Error al guardar los datos');
+      }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Error desconocido';
       const fullError = err instanceof Error ? err.stack : JSON.stringify(err);
-      setError(`Error: ${errorMessage}\nDetalles: ${fullError}`);
+      console.error('Form submission error:', { errorMessage, fullError });
+      setError(`Error: ${errorMessage}`);
     } finally {
       setIsSubmitting(false);
     }

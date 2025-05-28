@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import Logo from './Logo';
 // import NavigationDropdown from './NavigationDropdown';
 // import NavigationLink from './NavigationLink';
@@ -36,9 +36,11 @@ const Header = () => {
   };
 
   return (
-    <header className="w-full bg-white shadow-sm">
-      <nav className="container mx-auto px-4 py-4 flex justify-between items-center">
-        <Logo />
+    <header className="w-full bg-white shadow-sm fixed top-0 left-0 z-50">
+      <nav className="container mx-auto px-4 py-3 flex justify-between items-center">
+        <div className="flex-shrink-0">
+          <Logo />
+        </div>
         <div className="flex space-x-8 items-center">
           {/* Elementos eliminados: Acerca de, Mi Perfil, Últimos Movimientos, OTROS */}
           <a 

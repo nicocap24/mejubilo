@@ -1,10 +1,17 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const Logo = () => (
   <Link href="/" className="flex items-center">
-    <span className="text-2xl font-bold text-gray-700 mr-1">Me</span>
-    <span className="text-2xl font-bold text-orange-400">Jubilo</span>
+    <Image
+      src="/logo.png"
+      alt="MeJubilo"
+      width={120}
+      height={40}
+      className="h-10 w-auto"
+      priority
+    />
   </Link>
 );
 
