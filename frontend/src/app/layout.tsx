@@ -32,10 +32,11 @@ export default function RootLayout({
       <head>
         <Script
           id="adsbygoogle-init"
-          strategy="afterInteractive"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `
-              (adsbygoogle = window.adsbygoogle || []).push({
+              window.adsbygoogle = window.adsbygoogle || [];
+              window.adsbygoogle.push({
                 google_ad_client: "ca-pub-5179832879235237",
                 enable_page_level_ads: true
               });
@@ -43,10 +44,10 @@ export default function RootLayout({
           }}
         />
         <Script
-          async
+          id="adsbygoogle-script"
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5179832879235237"
           crossOrigin="anonymous"
-          strategy="afterInteractive"
+          strategy="beforeInteractive"
         />
       </head>
       <body className={`${inter.variable} ${roboto.variable} antialiased`}>
