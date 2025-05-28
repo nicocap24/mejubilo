@@ -4,6 +4,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { formatCurrency } from '../../../utils/formatters';
 import { useState, Suspense } from 'react';
 import { FaThumbsUp, FaThumbsDown } from 'react-icons/fa';
+import { FeedbackModal } from './components/FeedbackModal';
 
 function ResultadosContent() {
   const searchParams = useSearchParams();
@@ -23,6 +24,12 @@ function ResultadosContent() {
     comment: ''
   });
   const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [feedbackType, setFeedbackType] = useState<'positive' | 'negative' | null>(null);
+  const [feedbackComment, setFeedbackComment] = useState('');
+  const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
+  const [feedbackError, setFeedbackError] = useState<string | null>(null);
+  const [feedbackSuccess, setFeedbackSuccess] = useState(false);
   
   // Get form data from URL parameters
   const saldo = Number(searchParams?.get('saldo')) || 0;
@@ -30,6 +37,8 @@ function ResultadosContent() {
   const fondo = searchParams?.get('fondo') || '';
   const fechaNacimiento = searchParams?.get('fechaNacimiento') || '';
   const recordId = searchParams?.get('recordId') || '';
+  const nombre = searchParams?.get('nombre') || '';
+  const email = searchParams?.get('email') || '';
 
   console.log('URL Parameters:', { saldo, afp, fondo, fechaNacimiento });
 
@@ -172,10 +181,9 @@ function ResultadosContent() {
       });
 
       if (!response.ok) {
-        throw new Error(`Error al guardar: ${response.statusText}`);
+        throw new Error('Error al guardar la evaluación');
       }
 
-      const result = await response.json();
       setShowSuccessMessage(true);
       setSubscriptionData({ nombre: '', email: '' });
     } catch (error: any) {
@@ -184,16 +192,6 @@ function ResultadosContent() {
       if (error && error.message) {
         errorMsg += `\nDetalles: ${error.message}`;
       }
-      if (error && error.statusCode) {
-        errorMsg += `\nStatusCode: ${error.statusCode}`;
-      }
-      if (error && error.response) {
-        errorMsg += `\nResponse: ${JSON.stringify(error.response)}`;
-      }
-      if (error && error.data) {
-        errorMsg += `\nData: ${JSON.stringify(error.data)}`;
-      }
-      errorMsg += `\nError completo: ${JSON.stringify(error)}`;
       setError(errorMsg);
     }
   };
@@ -206,8 +204,17 @@ function ResultadosContent() {
     }));
   };
 
-  const handleFeedbackSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleFeedback = async (type: 'positive' | 'negative') => {
+    setFeedbackType(type);
+    setShowFeedbackModal(true);
+  };
+
+  const handleSubmitFeedback = async () => {
+    if (!feedbackType) return;
+
+    setIsSubmittingFeedback(true);
+    setFeedbackError(null);
+
     try {
       const response = await fetch('/api/feedback', {
         method: 'POST',
@@ -215,19 +222,28 @@ function ResultadosContent() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          rating: feedback.rating,
-          comment: feedback.comment,
-          email: 'nico@pensionfi.com'
+          type: feedbackType,
+          comment: feedbackComment,
+          recordId,
+          nombre,
+          email,
+          afp,
+          fondo,
+          saldo,
+          fechaNacimiento
         }),
       });
 
-      if (response.ok) {
-        setFeedbackSubmitted(true);
-        setShowFeedbackModal(false);
-        setFeedback({ rating: '', comment: '' });
+      if (!response.ok) {
+        throw new Error('Error al enviar el feedback');
       }
+
+      setFeedbackSuccess(true);
+      setShowFeedbackModal(false);
     } catch (error) {
-      console.error('Error submitting feedback:', error);
+      setFeedbackError('Error al enviar el feedback. Por favor, intenta nuevamente.');
+    } finally {
+      setIsSubmittingFeedback(false);
     }
   };
 
@@ -285,43 +301,17 @@ function ResultadosContent() {
         </div>
 
         {/* Feedback Modal */}
-        {showFeedbackModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-              <h3 className="text-xl font-semibold mb-4">Enviar Feedback</h3>
-              <form onSubmit={handleFeedbackSubmit}>
-                <div className="mb-4">
-                  <label className="block text-gray-700 text-sm font-bold mb-2">
-                    Comentarios
-                  </label>
-                  <textarea
-                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    rows={4}
-                    value={feedback.comment}
-                    onChange={handleFeedbackChange}
-                    placeholder="Escribe tus comentarios aquí..."
-                    required
-                  />
-                </div>
-                <div className="flex justify-end gap-4">
-                  <button
-                    type="button"
-                    onClick={() => setShowFeedbackModal(false)}
-                    className="px-4 py-2 text-gray-600 hover:text-gray-800"
-                  >
-                    Cancelar
-                  </button>
-                  <button
-                    type="submit"
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-                  >
-                    Enviar
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
+        <FeedbackModal
+          isOpen={showFeedbackModal}
+          onClose={() => setShowFeedbackModal(false)}
+          onSubmit={handleSubmitFeedback}
+          isSubmitting={isSubmittingFeedback}
+          error={feedbackError}
+          success={feedbackSuccess}
+          feedbackType={feedbackType}
+          comment={feedbackComment}
+          onCommentChange={setFeedbackComment}
+        />
 
         {/* Success Message */}
         {feedbackSubmitted && (
@@ -553,4 +543,4 @@ export default function ResultadosEvaluacion() {
       <ResultadosContent />
     </Suspense>
   );
-} 
+}
