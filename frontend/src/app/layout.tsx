@@ -30,9 +30,12 @@ export default function RootLayout({
   return (
     <html lang="es">
       <head>
-        <Script
-          id="adsbygoogle-init"
-          strategy="beforeInteractive"
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5179832879235237"
+          crossOrigin="anonymous"
+        />
+        <script
           dangerouslySetInnerHTML={{
             __html: `
               window.adsbygoogle = window.adsbygoogle || [];
@@ -42,12 +45,6 @@ export default function RootLayout({
               });
             `,
           }}
-        />
-        <Script
-          id="adsbygoogle-script"
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5179832879235237"
-          crossOrigin="anonymous"
-          strategy="beforeInteractive"
         />
       </head>
       <body className={`${inter.variable} ${roboto.variable} antialiased`}>
