@@ -31,6 +31,18 @@ export default function RootLayout({
     <html lang="es">
       <head>
         <Script
+          id="adsbygoogle-init"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              (adsbygoogle = window.adsbygoogle || []).push({
+                google_ad_client: "ca-pub-5179832879235237",
+                enable_page_level_ads: true
+              });
+            `,
+          }}
+        />
+        <Script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5179832879235237"
           crossOrigin="anonymous"
