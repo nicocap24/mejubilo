@@ -1,77 +1,77 @@
+'use client';
+
 import React from 'react';
 
-export default function PrivacyPolicy() {
+export default function PrivacyPolicyPage() {
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto">
-        <h1 className="text-4xl font-bold text-gray-900 mb-8">Política de Privacidad</h1>
+    <div className="min-h-screen w-full bg-cover bg-center flex flex-col items-center justify-center" style={{ backgroundImage: 'url(/bg-hero.png)', backgroundColor: 'rgba(255, 255, 255, 0.7)', backgroundBlendMode: 'overlay' }}>
+      <div className="mt-8 bg-white rounded-3xl shadow-2xl px-12 py-16 max-w-4xl w-full flex flex-col items-center border-2 border-gray-200">
+        <h1 className="text-4xl font-bold text-gray-900 mb-8 text-center">Política de Privacidad</h1>
         
-        <div className="space-y-8 text-gray-600">
-          <section>
-            <h2 className="text-2xl font-semibold text-gray-800 mb-4">1. Información que Recopilamos</h2>
-            <p className="mb-4">
-              En MeJubilo, recopilamos información necesaria para proporcionar nuestros servicios de información previsional, incluyendo:
+        <div className="prose prose-lg max-w-none">
+          <section className="mb-8">
+            <h2 className="text-2xl font-semibold text-gray-800 mb-4">Información que Recopilamos</h2>
+            <p className="text-gray-600 leading-relaxed">
+              En MeJubilo.com, recopilamos información que usted nos proporciona directamente, incluyendo:
             </p>
-            <ul className="list-disc pl-6 space-y-2">
-              <li>Información personal básica (nombre, email)</li>
-              <li>Datos previsionales que usted nos proporcione voluntariamente</li>
-              <li>Información sobre su uso de nuestra plataforma</li>
-              <li>Datos de contacto para comunicaciones relacionadas con nuestros servicios</li>
+            <ul className="list-disc pl-6 text-gray-600">
+              <li>Información de contacto (correo electrónico)</li>
+              <li>Información de su cuenta de AFP</li>
+              <li>Datos demográficos básicos</li>
             </ul>
           </section>
 
-          <section>
-            <h2 className="text-2xl font-semibold text-gray-800 mb-4">2. Uso de la Información</h2>
-            <p className="mb-4">
-              Utilizamos su información para:
+          <section className="mb-8">
+            <h2 className="text-2xl font-semibold text-gray-800 mb-4">Uso de Cookies</h2>
+            <p className="text-gray-600 leading-relaxed">
+              Utilizamos cookies y tecnologías similares para:
             </p>
-            <ul className="list-disc pl-6 space-y-2">
-              <li>Proporcionar análisis y recomendaciones previsionales personalizadas</li>
-              <li>Mejorar nuestros servicios y la experiencia del usuario</li>
-              <li>Comunicarnos con usted sobre actualizaciones y servicios relevantes</li>
-              <li>Cumplir con obligaciones legales y regulatorias</li>
+            <ul className="list-disc pl-6 text-gray-600">
+              <li>Mejorar su experiencia de navegación</li>
+              <li>Analizar el uso del sitio</li>
+              <li>Personalizar el contenido y anuncios</li>
             </ul>
           </section>
 
-          <section>
-            <h2 className="text-2xl font-semibold text-gray-800 mb-4">3. Protección de Datos</h2>
-            <p className="mb-4">
-              Nos comprometemos a proteger su información mediante:
+          <section className="mb-8">
+            <h2 className="text-2xl font-semibold text-gray-800 mb-4">Google AdSense</h2>
+            <p className="text-gray-600 leading-relaxed">
+              Utilizamos Google AdSense para mostrar anuncios. Google AdSense utiliza cookies para mostrar anuncios basados en sus visitas anteriores a este y otros sitios web. Puede optar por no recibir anuncios personalizados visitando la página de Configuración de anuncios de Google.
             </p>
-            <ul className="list-disc pl-6 space-y-2">
-              <li>Encriptación de datos sensibles</li>
-              <li>Acceso restringido a la información personal</li>
-              <li>Actualizaciones regulares de nuestras medidas de seguridad</li>
-              <li>Cumplimiento de las regulaciones de protección de datos aplicables</li>
-            </ul>
           </section>
 
-          <section>
-            <h2 className="text-2xl font-semibold text-gray-800 mb-4">4. Sus Derechos</h2>
-            <p className="mb-4">
+          <section className="mb-8">
+            <h2 className="text-2xl font-semibold text-gray-800 mb-4">Protección de Datos</h2>
+            <p className="text-gray-600 leading-relaxed">
+              Implementamos medidas de seguridad técnicas y organizativas para proteger sus datos personales contra el acceso no autorizado, la pérdida o la alteración.
+            </p>
+          </section>
+
+          <section className="mb-8">
+            <h2 className="text-2xl font-semibold text-gray-800 mb-4">Sus Derechos</h2>
+            <p className="text-gray-600 leading-relaxed">
               Usted tiene derecho a:
             </p>
-            <ul className="list-disc pl-6 space-y-2">
-              <li>Acceder a su información personal</li>
-              <li>Corregir datos inexactos</li>
+            <ul className="list-disc pl-6 text-gray-600">
+              <li>Acceder a sus datos personales</li>
+              <li>Rectificar información inexacta</li>
               <li>Solicitar la eliminación de sus datos</li>
-              <li>Retirar su consentimiento en cualquier momento</li>
+              <li>Oponerse al procesamiento de sus datos</li>
             </ul>
           </section>
 
-          <section>
-            <h2 className="text-2xl font-semibold text-gray-800 mb-4">5. Contacto</h2>
-            <p>
-              Para cualquier consulta sobre nuestra política de privacidad, puede contactarnos en:
-              <br />
-              <a href="mailto:nico@pensionfi.com" className="text-orange-500 hover:text-orange-600">
-                nico@pensionfi.com
-              </a>
+          <section className="mb-8">
+            <h2 className="text-2xl font-semibold text-gray-800 mb-4">Contacto</h2>
+            <p className="text-gray-600 leading-relaxed">
+              Para cualquier consulta sobre nuestra política de privacidad, puede contactarnos a través de:
+            </p>
+            <p className="text-gray-600 leading-relaxed">
+              Email: contacto@mejubilo.com
             </p>
           </section>
 
           <section>
-            <p className="text-sm text-gray-500">
+            <p className="text-gray-600 leading-relaxed">
               Última actualización: {new Date().toLocaleDateString()}
             </p>
           </section>
