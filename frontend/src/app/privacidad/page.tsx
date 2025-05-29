@@ -1,5 +1,6 @@
 'use client';
 
+// Privacy Policy Page for Google AdSense Compliance
 import React from 'react';
 
 export default function PrivacyPolicyPage() {
