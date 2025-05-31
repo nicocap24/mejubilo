@@ -23,16 +23,18 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="es">
       <head />
-      <body className={`${inter.variable} ${roboto.variable} antialiased`}>
+      <body className={`${inter.variable} ${roboto.variable} font-sans`}>
         <GoogleAnalytics />
         <Header />
-        {children}
+        <main className="pt-16">
+          {children}
+        </main>
         <Footer />
       </body>
     </html>
